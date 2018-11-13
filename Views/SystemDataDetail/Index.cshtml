@@ -1,0 +1,54 @@
+﻿@using MvcDemand.Models
+@model SystemDataDetailModels
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    $(function ($) {
+        $('#dropExecute').change(funcSelectChange);
+    });
+    
+
+    funcSelectChange = function () {
+        var selValue = $('#dropExecute :selected').val();
+        switch (selValue) {
+            case "":
+                $('#showUpload').fadeOut("slow");
+                break;            
+            case "U":
+                $('#showUpload').fadeIn("slow");
+                break;
+            case "O":
+                $('#showUpload').fadeOut("slow");
+                break;
+        }
+        return false;
+    }
+
+</script>
+@using (Html.BeginForm("Index", "SystemDataDetail", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{ 
+<table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+    <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">系統參數資料檔<hr /></td></tr>
+    <tr style="height:35px;">
+        <td style="width:700px; text-align:left">
+            關鍵字 : @Html.TextBox("searchValue", (string)ViewBag.searchValue, new { Style = "width:600px; height:35px" })
+            <input type="submit" id="btnsubmit" value="查詢" style="width:100px; height:30px;font-weight:bold;font-size:18px" />
+        </td>
+        <td style="width:200px; text-align:right">
+            <select id="dropExecute" name="dropExecute" style="width:200px; height:30px;font-size:16px;font-weight:bold">
+                <option value="">請選擇</option><option value="U">上傳資料檔</option><option value="O">匯出資料檔</option>
+            </select>                    
+        </td>
+    </tr>    
+    <tr id="showUpload" style="background-color:#F5F5F5; display:none">
+    <td style="width:700px; text-align:left">
+        <input type="file" id="uploadFile" name="uploadFile" style="width:100%; height:30px;" />
+    </td><td style="width:200px; text-align:left"><input type="button" id="btnUpload" value="上傳" style="width:100px; height:30px; font-size:16px; font-weight:bold" />
+        </td></tr>
+    <tr><td style="width:100%" colspan="4"><hr /></td></tr>
+    <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("List", Model);}</td></tr>
+</table>
+}

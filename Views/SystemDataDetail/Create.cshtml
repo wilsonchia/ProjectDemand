@@ -1,0 +1,13 @@
+﻿@using MvcDemand.Models
+@model SystemDataDetailModels
+@{  Layout = "~/Views/Shared/_Layout.cshtml";}
+@using (Html.BeginForm("Create", "SystemDataDetail", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.Hidden("hideSystemStatus","")
+    <table style="width:700px; text-align:center" border="1" cellpadding="0" cellspacing="0">
+        <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center">新增系統參數基本資料</td></tr>
+
+    </table>
+    
+}
+

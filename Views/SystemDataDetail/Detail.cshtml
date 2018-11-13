@@ -1,0 +1,20 @@
+﻿@using MvcDemand.Models
+@model SystemDataDetailModels
+@{ Layout = null; }
+
+<table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+    @foreach (var item in Model.detailSystemDataDetail)
+    {
+        <tr style="height:30px;font-size:14px;">
+            <td style="width:125px; text-align:left">&nbsp;</td>
+            <td style="width:50px; text-align:center">@item.oSystemValue.ToString()</td>
+            <td style="width:200px; text-align:left">@item.oSystemTitle.ToString()</td>
+            <td style="width:175px; text-align:left">@item.oSystemNotation.ToString()</td>
+            <td style="width:225px; text-align:left">@item.oSystemRemark.ToString()</td>
+            <td style="width:50px; text-align:center">@item.oSystemStatus.ToString()</td>
+            <td style="width:50px; text-align:center; background-color:blue">@Html.ActionLink("修改", "Update", "SystemDetail", new { cl = item.oSystemClass.ToString(), vl = item.oSystemValue }, new AjaxOptions { HttpMethod = "POST" })</td>
+            <td style="width:50px; text-align:center; background-color:blue">@Html.ActionLink("刪除", "Delete", "SystemDetail", new { cl = item.oSystemClass.ToString(), vl = item.oSystemValue }, new AjaxOptions { HttpMethod = "POST" })</td>
+        </tr>
+    }
+</table>    
+    
