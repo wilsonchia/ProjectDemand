@@ -61,9 +61,17 @@ namespace MvcDemand.App_Start
         {
             msExecuteValue = "";
             try {
-                msConn = new System.Data.SqlClient.SqlConnection(msConnValue); msConn.Close();
+                msConn = new System.Data.SqlClient.SqlConnection(msConnValue); msConn.Open();
                 msComm = new System.Data.SqlClient.SqlCommand(rtnExecuteSQL, msConn);
+                if (valDicPara != null)
+                {
+                    foreach (KeyValuePair<string, object> item in valDicPara)
+                    {
+                        msComm.Parameters.Add(item.Key.ToString(), item.Value.ToString());
+                    }
+                }
                 msExecuteValue =  (msComm.ExecuteNonQuery() == 1) ? "O" : "X";
+                msConn.Dispose(); msComm.Dispose();
             } catch (Exception ex) {
                 msExecuteValue = ex.Message;
             }
@@ -79,7 +87,7 @@ namespace MvcDemand.App_Start
         }
 
         public Dictionary<string, object> GetListToNewDictionary(List<string> listDicKey, List<object> listDicValue) {
-            msDicPara = null;
+            msDicPara = new Dictionary<string, object>();
             try {
                 if (listDicValue != null) {
                     for (int i = 0; i < listDicKey.Count; i++) { msDicPara.Add(listDicKey[i].ToString(), listDicValue[i]); }

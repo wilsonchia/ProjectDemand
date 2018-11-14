@@ -76,8 +76,8 @@
                 <td style="width:175px; text-align:left">@Model.viewSystemDataDetail[i].oSystemNotation.ToString()</td>
                 <td style="width:225px; text-align:left">@Model.viewSystemDataDetail[i].oSystemRemark.ToString()</td>
                 <td style="width:50px; text-align:center">@Model.viewSystemDataDetail[i].oSystemStatus.ToString()</td>
-                <td style="width:50px; text-align:center; background-color:	#5F9EA0">@Html.ActionLink("新增", "Update", "SystemDetail", new { cl = Model.viewSystemDataDetail[i].oSystemClass, vl = Model.viewSystemDataDetail[i].oSystemValue }, new AjaxOptions { HttpMethod = "POST" })</td>
-                <td style="width:50px; text-align:center; background-color:	#5F9EA0">@Html.ActionLink("明細", null, null, null, new { onclick = "funcDataShow('" + Model.viewSystemDataDetail[i].oSystemClass.ToString() + "');", href = "#" })</td>
+                <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("新增", null, null, null, new { onclick = "$('#showCreate').fadeIn('show');SendDataCreate('" + Model.viewSystemDataDetail[i].oSystemClass.ToString() + "')", href = "#" })</td>
+                <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("明細", null, null, null, new { onclick = "funcDataShow('" + Model.viewSystemDataDetail[i].oSystemClass.ToString() + "');", href = "#" })</td>
             </tr>
             <tr><td style="width:100%" colspan="9"><hr /></td></tr>
             <tr id="show_@Model.viewSystemDataDetail[i].oSystemClass.ToString()" style="display:none"><td style="width:100%" colspan="9">

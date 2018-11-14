@@ -107,6 +107,7 @@ namespace MvcDemand.Models
                 funExecuteSQL += " ) ";
                 funDicParas = null; funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataCreate);
                 funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
+                //funExecuteValue = funExecuteSQL;
             } catch (Exception ex) {
                 funExecuteValue = ex.Message;
             }

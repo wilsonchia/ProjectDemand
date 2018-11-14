@@ -4,6 +4,63 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+
+.modal {
+    text-align:center;
+    position:fixed;
+    z-index:1;
+    top:5%;
+    left:0;
+    width:100%;
+    height:100%;
+    font-size: 100%;
+    background-color:rgba(0,0,0,0.6) !important;
+}
+.modal_body {
+    text-align:center;
+    position: absolute;    
+    background-color:#F6F6F6;
+    /*background-color: white;*/
+    /*width:90%;*/
+    /*width: 870px;*/
+    top :10%;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto;   
+    border-style: solid;
+    border-color:#2E6E9E;
+}
+
+.modalU {
+    text-align:center;
+    position:fixed;
+    z-index:1;
+    top:5%;
+    left:0;
+    width:100%;
+    height:100%;
+    font-size: 100%;
+    background-color:rgba(0,0,0,0.6) !important;
+}
+.modalU_body {
+    text-align:center;
+    position: absolute;    
+    background-color:#F6F6F6;
+    /*background-color: white;*/
+    /*width:90%;*/
+    /*width: 870px;*/
+    top :10%;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto;   
+    border-style: solid;
+    border-color:#2E6E9E;
+}
+
+</style>
 <script type="text/javascript">
 
     $(function ($) {
@@ -13,10 +70,15 @@
 
     funcSelectChange = function () {
         var selValue = $('#dropExecute :selected').val();
+
         switch (selValue) {
             case "":
                 $('#showUpload').fadeOut("slow");
-                break;            
+                break;
+            case "N":
+                $('#showUpload').fadeOut("slow");
+                $('#showCreate').fadeIn("show");
+                break;
             case "U":
                 $('#showUpload').fadeIn("slow");
                 break;
@@ -29,26 +91,131 @@
 
 </script>
 @using (Html.BeginForm("Index", "SystemDataDetail", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
-{ 
-<table style="width:100%" border="0" cellpadding="0" cellspacing="0">
-    <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">系統參數資料檔<hr /></td></tr>
-    <tr style="height:35px;">
-        <td style="width:700px; text-align:left">
-            關鍵字 : @Html.TextBox("searchValue", (string)ViewBag.searchValue, new { Style = "width:600px; height:35px" })
-            <input type="submit" id="btnsubmit" value="查詢" style="width:100px; height:30px;font-weight:bold;font-size:18px" />
-        </td>
-        <td style="width:200px; text-align:right">
-            <select id="dropExecute" name="dropExecute" style="width:200px; height:30px;font-size:16px;font-weight:bold">
-                <option value="">請選擇</option><option value="U">上傳資料檔</option><option value="O">匯出資料檔</option>
-            </select>                    
-        </td>
-    </tr>    
-    <tr id="showUpload" style="background-color:#F5F5F5; display:none">
-    <td style="width:700px; text-align:left">
-        <input type="file" id="uploadFile" name="uploadFile" style="width:100%; height:30px;" />
-    </td><td style="width:200px; text-align:left"><input type="button" id="btnUpload" value="上傳" style="width:100px; height:30px; font-size:16px; font-weight:bold" />
-        </td></tr>
-    <tr><td style="width:100%" colspan="4"><hr /></td></tr>
-    <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("List", Model);}</td></tr>
-</table>
+{
+    <div id="showList">
+        <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">系統參數資料檔<hr /></td></tr>
+            <tr style="height:35px;">
+                <td style="width:700px; text-align:left">
+                    關鍵字 : @Html.TextBox("searchValue", (string)ViewBag.searchValue, new { Style = "width:600px; height:35px" })
+                    <input type="submit" id="btnsubmit" value="查詢" style="width:100px; height:30px;font-weight:bold;font-size:18px" />
+                </td>
+                <td style="width:200px; text-align:right">
+                    <select id="dropExecute" name="dropExecute" style="width:200px; height:30px;font-size:16px;font-weight:bold">
+                        <option value="">請選擇</option>
+                        <option value="N">新增系統參數</option>
+                        <option value="U">上傳資料檔</option>
+                        <option value="O">匯出資料檔</option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="showUpload" style="background-color:#F5F5F5; display:none">
+                <td style="width:700px; text-align:left">
+                    <input type="file" id="uploadFile" name="uploadFile" style="width:100%; height:30px;" />
+                </td>
+                <td style="width:200px; text-align:left">
+                    <input type="button" id="btnUpload" value="上傳" style="width:100px; height:30px; font-size:16px; font-weight:bold" />
+                </td>
+            </tr>
+            <tr><td style="width:100%" colspan="4"><hr /></td></tr>
+            <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("List", Model);}</td></tr>
+        </table>
+    </div>
+    @Html.Hidden("hideSystemClass","") 
+    @Html.Hidden("hideSystemValue","")
+    @Html.Hidden("hideSystemTitle","") 
+    @Html.Hidden("hideSystemNotation","")
+    @Html.Hidden("hideSystemRemark","") 
+    @Html.Hidden("hideSystemStatus","")
+    
+    <script type="text/javascript">
+
+        SendDataCreate = function (valSystemClass) {
+            $('#textSystemClass').val(valSystemClass);
+            $('#hideSystemClass').val(valSystemClass);
+            $('#textSystemClass').attr("disabled", true);
+            $('#textSystemValue').focus();
+        }
+
+        FormDataCreate = function (valSystemClass) {
+            if ($('#textSystemValue').val() == "") { $('#showMess').notify("系統參數值不得空白!!"); $('#textSystemValue').focus(); return false; } else { $('#hideSystemValue').val($('#textSystemValue').val()); }
+            if ($('#textSystemTitle').val() == "") { $('#showMess').notify("系統參數標題不得空白!!"); $('#textSystemTitle').focus(); return false; } else { $('#hideSystemTitle').val($('#textSystemTitle').val()); }
+            if ($('#checkSystemStatus').prop('checked') == true) { $('#hideSystemStatus').val('O'); } else { $('#hideSystemStatus').val('X'); }
+            if ($('#textSystemNotation').val() != "") { $('#hideSystemNotation').val($('#textSystemNotation').val()); }
+            if ($('#textSystemRemark').val() != "") { $('#hideSystemRemark').val($('#textSystemRemark').val()); }
+            $('#form1').attr('action', 'SystemDataDetail/Create');
+            $('#form1').submit();
+        }
+
+        SendDataUpdate = function (vClass, vValue, vTitle, vNotation, vRemark, vStatus) {
+            $('#hideSystemClass').val(vClass); $('#textSystemClassU').val(vClass); $('#textSystemClassU').attr("disabled", true);
+            $('#hideSystemValue').val(vValue); $('#textSystemValueU').val(vValue); $('#textSystemValueU').attr("disabled", true);
+            $('#hideSystemTitle').val(vTitle); $('#textSystemTitleU').val(vTitle); $('#etxtSystemTitle').focus();
+            $('#hideSystemNotation').val(vNotation); $('#textSystemNotationU').val(vNotation);
+            $('#hideSystemRemark').val(vRemark); $('#textSystemRemarkU').val(vRemark);
+            $('#hideSystemStatus').val(vStatus); if (vStatus == "O") { $('#checkSystemStatusU').attr("checked", true); } else { $('#checkSystemStatusU').attr("checked", false); }
+        }
+
+    </script>
+    
+    <div id="showCreate" class="modal" style="display:none; text-align:center">
+
+        <table class="modal_body" style="width:700px; text-align:center" border="1" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增系統參數基本資料</td></tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統類別</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textSystemClass", "", new { Style = "width:90%; height:30px" })</td>            
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統數值</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textSystemValue", "", new { Style = "width:90%; height:30px" })</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統標題</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textSystemTitle", "", new { Style = "width:90%; height:30px" })</td>
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">開放使用</td>
+                <td style="width:250px; text-align:left">@Html.CheckBox("checkSystemStatus", false) 可使用</td>                
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統說明</td>
+                <td style="width:600px; text-align:left" colspan="3">@Html.TextArea("textSystemNotation", "", 5, 180, new { Style = "width:95%" })</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統備註</td>
+                <td style="width:600px; text-align:left" colspan="3">@Html.TextArea("textSystemRemark", "", 5, 180, new { Style = "width:95%" })</td>
+            </tr>
+            <tr><td colspan="4"><span id="showMess"></span></td></tr>
+            <tr style="height:30px">
+                <td style="width:100%; text-align:center" colspan="4"><input type="button" id="btnFormC" value="確認新增" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" /></td>
+            </tr>
+        </table>
+    </div>
+    
+    <div id="showUpdate" class="modelU" style="display:none; text-align:center">
+        <table class="modalU_body" style="width:700px; text-align:center" border="1" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增系統參數基本資料</td></tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統類別</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textSystemClassU", "", new { Style = "width:90%; height:30px" })</td>
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統數值</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textSystemValueU", "", new { Style = "width:90%; height:30px" })</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統標題</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textSystemTitleU", "", new { Style = "width:90%; height:30px" })</td>
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">開放使用</td>
+                <td style="width:250px; text-align:left">@Html.CheckBox("checkSystemStatusU", false) 可使用</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統說明</td>
+                <td style="width:600px; text-align:left" colspan="3">@Html.TextArea("textSystemNotationU", "", 5, 180, new { Style = "width:95%" })</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統備註</td>
+                <td style="width:600px; text-align:left" colspan="3">@Html.TextArea("textSystemRemarkU", "", 5, 180, new { Style = "width:95%" })</td>
+            </tr>
+            <tr><td colspan="4"><span id="showMess"></span></td></tr>
+            <tr style="height:30px">
+                <td style="width:100%; text-align:center" colspan="4"><input type="button" id="btnFormU" value="確認修改" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" /></td>
+            </tr>
+        </table>
+    </div>
 }

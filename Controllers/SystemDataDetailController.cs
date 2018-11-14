@@ -54,6 +54,17 @@ namespace MvcDemand.Controllers
             return PartialView("List", viewModel);
         }
       
+        [HttpPost]
+        public RedirectResult Create(FormCollection form)
+        {
+            List<object> aryDataCreate = new List<object>() { 
+                form["hideSystemClass"].ToString(), form["hideSystemValue"].ToString(),
+                form["hideSystemTitle"].ToString(), form["hideSystemNotation"].ToString(),
+                form["hideSystemRemark"].ToString(), form["hideSystemStatus"].ToString()
+            };
+            String funExecuteValue = sddModel.DataCreate(aryDataCreate);
+            return Redirect("~/SystemDataDetail/Index");
+        }
 
     }
 }
