@@ -75,10 +75,6 @@
             case "":
                 $('#showUpload').fadeOut("slow");
                 break;
-            case "N":
-                $('#showUpload').fadeOut("slow");
-                $('#showCreate').fadeIn("show");
-                break;
             case "U":
                 $('#showUpload').fadeIn("slow");
                 break;
@@ -102,8 +98,7 @@
                 </td>
                 <td style="width:200px; text-align:right">
                     <select id="dropExecute" name="dropExecute" style="width:200px; height:30px;font-size:16px;font-weight:bold">
-                        <option value="">請選擇</option>
-                        <option value="N">新增系統參數</option>
+                        <option value="">請選擇</option>                        
                         <option value="U">上傳資料檔</option>
                         <option value="O">匯出資料檔</option>
                     </select>
@@ -138,12 +133,16 @@
         }
 
         FormDataCreate = function (valSystemClass) {
-            if ($('#textSystemValue').val() == "") { $('#showMess').notify("系統參數值不得空白!!"); $('#textSystemValue').focus(); return false; } else { $('#hideSystemValue').val($('#textSystemValue').val()); }
-            if ($('#textSystemTitle').val() == "") { $('#showMess').notify("系統參數標題不得空白!!"); $('#textSystemTitle').focus(); return false; } else { $('#hideSystemTitle').val($('#textSystemTitle').val()); }
+            if ($('#textSystemValue').val() == "") {
+                $('#showMess').notify("系統參數值不得空白!!"); $('#textSystemValue').focus(); return false;
+            } else { $('#hideSystemValue').val($('#textSystemValue').val()); }
+            if ($('#textSystemTitle').val() == "") {
+                $('#showMess').notify("系統參數標題不得空白!!"); $('#textSystemTitle').focus(); return false;
+            } else { $('#hideSystemTitle').val($('#textSystemTitle').val()); }
             if ($('#checkSystemStatus').prop('checked') == true) { $('#hideSystemStatus').val('O'); } else { $('#hideSystemStatus').val('X'); }
             if ($('#textSystemNotation').val() != "") { $('#hideSystemNotation').val($('#textSystemNotation').val()); }
             if ($('#textSystemRemark').val() != "") { $('#hideSystemRemark').val($('#textSystemRemark').val()); }
-            $('#form1').attr('action', 'SystemDataDetail/Create');
+            $('#form1').attr('action', 'Create');
             $('#form1').submit();
         }
 
@@ -154,6 +153,17 @@
             $('#hideSystemNotation').val(vNotation); $('#textSystemNotationU').val(vNotation);
             $('#hideSystemRemark').val(vRemark); $('#textSystemRemarkU').val(vRemark);
             $('#hideSystemStatus').val(vStatus); if (vStatus == "O") { $('#checkSystemStatusU').attr("checked", true); } else { $('#checkSystemStatusU').attr("checked", false); }
+        }
+
+        FormDataUpdate = function () {
+            if ($('#textSystemTitleU').val() == "") {
+                $('#showMess').notify("系統參數標題不得空白!!"); $('#textSystemTitleU').focus(); return false;
+            } else { $('#hideSystemTitle').val($('#textSystemTitleU').val()); }
+            if ($('#checkSystemStatusU').prop('checked') == true) { $('#hideSystemStatus').val('O'); } else { $('#hideSystemStatus').val('X'); }
+            if ($('#textSystemNotationU').val() != "") { $('#hideSystemNotation').val($('#textSystemNotationU').val()); }
+            if ($('#textSystemRemarkU').val() != "") { $('#hideSystemRemark').val($('#textSystemRemarkU').val()); }
+            $('#form1').attr('action', 'Update');
+            $('#form1').submit();
         }
 
     </script>
@@ -184,7 +194,10 @@
             </tr>
             <tr><td colspan="4"><span id="showMess"></span></td></tr>
             <tr style="height:30px">
-                <td style="width:100%; text-align:center" colspan="4"><input type="button" id="btnFormC" value="確認新增" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" /></td>
+                <td style="width:100%; text-align:center" colspan="4">
+                    <input type="button" id="btnFormC" value="確認新增" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" />
+                    <input type="button" id="btnCleanC" value="取消新增" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showCreate').hide();" />
+                </td>
             </tr>
         </table>
     </div>
@@ -214,7 +227,10 @@
             </tr>
             <tr><td colspan="4"><span id="showMess"></span></td></tr>
             <tr style="height:30px">
-                <td style="width:100%; text-align:center" colspan="4"><input type="button" id="btnFormU" value="確認修改" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" /></td>
+                <td style="width:100%; text-align:center" colspan="4">
+                    <input type="button" id="btnFormU" value="確認修改" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataUpdate();" />
+                    <input type="button" id="btnCleanU" value="取消修改" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showUpdate').hide();" />
+                </td>
             </tr>
         </table>
     </div>

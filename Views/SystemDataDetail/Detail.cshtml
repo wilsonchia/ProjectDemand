@@ -13,7 +13,7 @@
             <td style="width:225px; text-align:left">@item.oSystemRemark.ToString()</td>
             <td style="width:50px; text-align:center">@item.oSystemStatus.ToString()</td>
             <td style="width:50px; text-align:center; background-color:blue">@Html.ActionLink("修改", null, null, null, new { onclick = "$('#showUpdate').fadeIn('show');SendDataUpdate('" + item.oSystemClass.ToString() + "','" + item.oSystemValue.ToString() + "','" + item.oSystemTitle.ToString() + "','" + item.oSystemNotation.ToString() + "','" + item.oSystemRemark.ToString() + "','" + item.oSystemStatus.ToString() + "')", href = "#" })</td>
-            <td style="width:50px; text-align:center; background-color:blue">@Html.ActionLink("刪除", "Delete", "SystemDetail", new { cl = item.oSystemClass.ToString(), vl = item.oSystemValue }, new AjaxOptions { HttpMethod = "POST" })</td>
+            <td style="width:50px; text-align:center; background-color:blue">@Html.ActionLink("刪除", "Delete", "SystemDataDetail", new { vClass = item.oSystemClass.ToString(), vValue = item.oSystemValue }, new AjaxOptions { HttpMethod = "POST" })</td>
         </tr>
     }
 </table>    

@@ -107,7 +107,6 @@ namespace MvcDemand.Models
                 funExecuteSQL += " ) ";
                 funDicParas = null; funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataCreate);
                 funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
-                //funExecuteValue = funExecuteSQL;
             } catch (Exception ex) {
                 funExecuteValue = ex.Message;
             }
@@ -117,16 +116,16 @@ namespace MvcDemand.Models
         public string DataUpdate(List<object> listDataUpdate) {
             funExecuteSQL = ""; funExecuteValue = ""; funDicParas = null;
             try {
-                funExecuteSQL = "Update SystemDetail Set ";
+                funExecuteSQL = "Update SystemDataDetail Set ";
                 for (int i = 2; i < aryColumnName.Count; i++) {
                     funExecuteSQL += string.Format(@" {0}={1}{2}", aryColumnName[i], aryDeclareName[i], (i < aryColumnName.Count - 1) ? "," : "");
                 }
                 funExecuteSQL += " Where ";
                 for (int j = 0; j < 2; j++) {
-                    funExecuteSQL += string.Format(@" {0}={1}{2}", aryColumnName[j], aryDeclareName[j], (j < aryDeclareName.Count - 1) ? " and " : "");
+                    funExecuteSQL += string.Format(@" {0}={1}{2}", aryColumnName[j], aryDeclareName[j], (j < 1) ? " and " : "");
 			    }
                 funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataUpdate);
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
+                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);                
             } catch (Exception ex) {
                 funExecuteValue = ex.Message;
             }
