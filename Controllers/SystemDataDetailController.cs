@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data;
 using MvcDemand.Models;
+using System.IO;
+using NPOI.SS.UserModel;
+using NPOI.HSSF.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace MvcDemand.Controllers
 {
@@ -64,6 +68,72 @@ namespace MvcDemand.Controllers
             };
             String funExecuteValue = sddModel.DataCreate(aryDataCreate);
             return Redirect("~/SystemDataDetail/Index");
+        }
+
+        [HttpPost]
+        public RedirectResult Update(FormCollection form)
+        {
+            List<object> aryDataUpdate = new List<object>()
+            {
+                form["hideSystemClass"].ToString(), form["hideSystemValue"].ToString(),
+                form["hideSystemTitle"].ToString(), form["hideSystemNotation"].ToString(),
+                form["hideSystemRemark"].ToString(), form["hideSystemStatus"].ToString()
+            };
+            string funExecuteValue = sddModel.DataUpdate(aryDataUpdate);
+            return Redirect("~/SystemDataDetail/Index");
+        }
+
+        public RedirectResult Delete(string vClass, string vValue)
+        {
+            string funExecuteValue = sddModel.DataDelete(Request["vClass"], Request["vValue"]);
+            return Redirect("~/SystemDataDetail/Index");
+        }
+
+        [HttpPost]
+        public void OutToExecl()
+        {
+            List<string> listColumn = new List<string>() { "SystemClass", "systemValue", "SystemTitle", "SystemNotation", "SystemRemark", "SystemStatus" };
+            List<oSystemDataDetail> systemDetailList = new List<oSystemDataDetail>(); systemDetailList = sddModel.listObjSystemDataDetail();
+            string FileName = "Data.xlsx"; string SheetName = "Data"; Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            XSSFWorkbook NpoiWB = new XSSFWorkbook();
+
+            XSSFCellStyle xCellStyle = (XSSFCellStyle)NpoiWB.CreateCellStyle();
+            XSSFDataFormat NpoiFormat = (XSSFDataFormat)NpoiWB.CreateDataFormat();
+            xCellStyle.SetDataFormat(NpoiFormat.GetFormat("[DbNum2][$-804]0"));
+            XSSFCellStyle cellStyleFontColor = (XSSFCellStyle)NpoiWB.CreateCellStyle();
+            XSSFFont font1 = (XSSFFont)NpoiWB.CreateFont(); font1.Color = (short)10; font1.IsBold = true; cellStyleFontColor.SetFont(font1);
+
+            ISheet xSheet = NpoiWB.CreateSheet(SheetName);
+
+            IRow xRowT = xSheet.CreateRow(0); xRowT.HeightInPoints = 40;
+            for (int i = 0; i < listColumn.Count; i++) {
+                ICell xCellT = xRowT.CreateCell(i); xCellT.SetCellValue(listColumn[i]);
+            }
+            int len = 0;
+            foreach (oSystemDataDetail item in systemDetailList) {
+                List<string> itemData = new List<string>();
+                itemData.Add(item.oSystemClass.ToString()); itemData.Add(item.oSystemValue.ToString());
+                itemData.Add(item.oSystemTitle.ToString()); itemData.Add(item.oSystemNotation.ToString());
+                itemData.Add(item.oSystemRemark.ToString()); itemData.Add(item.oSystemStatus.ToString());
+                IRow xRowD = xSheet.CreateRow(len + 1); xRowD.HeightInPoints = 40;
+                for (int b = 0; b < itemData.Count; b++) {
+                    ICell xCellData = xRowD.CreateCell(b); xCellData.SetCellValue(itemData[b]);
+                }
+                len++;
+            }
+            
+            MemoryStream MS = new MemoryStream(); NpoiWB.Write(MS);
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + FileName + "");
+            Response.BinaryWrite(MS.ToArray());
+            NpoiWB = null; MS.Close(); MS.Dispose(); Response.Flush(); Response.End();
+            
+
+        }
+
+        [HttpPost]
+        public void UploadExcel() { 
+            
         }
 
     }
