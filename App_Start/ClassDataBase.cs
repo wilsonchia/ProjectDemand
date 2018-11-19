@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
 
-namespace MvcDemand.App_Start
+namespace MvcDemand
 {
     public class ClassDataBase
     {

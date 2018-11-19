@@ -15,6 +15,7 @@ namespace MvcDemand.Controllers
     public class SystemDataDetailController : Controller
     {
         SystemDataDetailModels sddModel = new SystemDataDetailModels();
+        ClassDataBase dbClass = new ClassDataBase();
 
 
         public ActionResult Index(SystemDataDetailModels viewModel)
@@ -132,9 +133,23 @@ namespace MvcDemand.Controllers
         }
 
         [HttpPost]
-        public void UploadExcel() { 
-            
+        public void UploadExcel(HttpPostedFileBase fileUpload) {
+            string showDetailData = ""; DataTable dtSystemDetail = new DataTable();
+            String FilePath = System.Web.HttpContext.Current.Server.MapPath("~/excel");
+            if (fileUpload != null && fileUpload.ContentLength > 0)
+            {
+                String OriFileName = fileUpload.FileName.ToString();
+                fileUpload.SaveAs(string.Format(@"{0}\{1}", FilePath, OriFileName));
+                dynamic npoiweb; DataTable tmpDataTable = new DataTable(); tmpDataTable.Clear();
+                using (MemoryStream ms = new MemoryStream(dbClass.rtnByteReadFromFile(string.Format(@"{0}\{1}", FilePath, OriFileName)))) 
+                {
+                    npoiweb = WorkbookFactory.Create(ms);                
+                }
+                
+            }
         }
+
+
 
     }
 }

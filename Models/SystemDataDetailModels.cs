@@ -9,7 +9,7 @@ namespace MvcDemand.Models
 {
     public class SystemDataDetailModels
     {
-        App_Start.ClassDataBase dbClass = new App_Start.ClassDataBase();
+        ClassDataBase dbClass = new ClassDataBase();
         public List<oSystemDataDetail> viewSystemDataDetail = new List<oSystemDataDetail>();
         public List<oSystemDataDetail> detailSystemDataDetail = new List<oSystemDataDetail>();
         public string valSystemClass { get; set; }
