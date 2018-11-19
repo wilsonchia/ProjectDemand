@@ -89,10 +89,12 @@
     FormExcelOut = function () { $('#form1').attr("action", "SystemDataDetail/OutToExecl"); $('#form1').submit(); }
 
     FormExcelUpload = function () {
-        if ($('#uploadFile').val() == "") {
-            $.notify("上傳檔案不得空白!!"); $('#uploadFile').focus(); return false;
+        if ($('#fileUpload').val() == "") {
+            $.notify("上傳檔案不得空白!!");
+            $('#fileUpload').focus();
+            return false;
         } else {
-            $('#form1').attr("action", "SystemDataDetail/UploadExcel");
+            $('#form1').attr("action", "SystemDataDetail/Upload");
             $('#form1').submit();
         }        
     }
@@ -118,7 +120,7 @@
             </tr>
             <tr id="showUpload" style="vertical-align:middle;display:none">
                 <td style="width:700px; text-align:left">
-                    <input type="file" id="uploadFile" name="uploadFile" style="width:100%; height:30px;" />
+                    <input type="file" id="fileUpload" name="fileUpload" style="width:100%; height:30px;" />
                 </td>
                 <td style="width:200px; text-align:right">
                     <input type="button" id="btnUpload" value="上傳" style="width:100px; height:30px; font-size:16px; font-weight:bold" onclick="FormExcelUpload();" />

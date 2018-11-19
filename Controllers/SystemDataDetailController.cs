@@ -133,21 +133,80 @@ namespace MvcDemand.Controllers
         }
 
         [HttpPost]
-        public void UploadExcel(HttpPostedFileBase fileUpload) {
+        public RedirectResult Upload(HttpPostedFileBase fileUpload)
+        {
             string showDetailData = ""; DataTable dtSystemDetail = new DataTable();
-            String FilePath = System.Web.HttpContext.Current.Server.MapPath("~/excel");
             if (fileUpload != null && fileUpload.ContentLength > 0)
             {
-                String OriFileName = fileUpload.FileName.ToString();
-                fileUpload.SaveAs(string.Format(@"{0}\{1}", FilePath, OriFileName));
-                dynamic npoiweb; DataTable tmpDataTable = new DataTable(); tmpDataTable.Clear();
-                using (MemoryStream ms = new MemoryStream(dbClass.rtnByteReadFromFile(string.Format(@"{0}\{1}", FilePath, OriFileName)))) 
+                string FilePath = System.Web.HttpContext.Current.Server.MapPath("~/excel");
+                string FileName = fileUpload.FileName;
+                fileUpload.SaveAs(string.Format(@"{0}\{1}", FilePath, FileName));
+                dynamic hssfweb; DataTable tempDataTable = new DataTable(); tempDataTable.Clear();
+                using (MemoryStream ms = new MemoryStream(dbClass.rtnByteReadFromFile(string.Format(@"{0}\{1}", FilePath, FileName))))
                 {
-                    npoiweb = WorkbookFactory.Create(ms);                
+                    hssfweb = WorkbookFactory.Create(ms);
                 }
-                
+                ISheet sheet = (ISheet)hssfweb.GetSheetAt(0);
+                if (sheet.LastRowNum > 0)
+                {
+                    IRow rowT = (IRow)sheet.GetRow(0);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        DataColumn col = new DataColumn(rowT.GetCell(i).ToString(), typeof(string));
+                        tempDataTable.Columns.Add(col);
+                    }
+                    for (int i = 1; i <= sheet.LastRowNum; i++)
+                    {
+                        IRow rowD = (IRow)sheet.GetRow(i);
+                        if (rowD != null)
+                        {
+                            DataRow tempRow = tempDataTable.NewRow();
+                            for (int a = 0; a < 6; a++)
+                            {
+                                tempRow[a] = (rowD.GetCell(a).ToString() != null) ? rowD.GetCell(a).ToString() : "";
+                            }
+                        }
+                    }
+                    List<oSystemDataDetail> SystemDetailList = sddModel.listObjSystemDataDetail();
+                    string valSystemClass, valSystemValue, valSystemTitle, valSystemNotation, valSystemRemark, valSystemStatus;
+                    if (tempDataTable.Rows.Count > 0)
+                    {
+                        foreach (DataRow drtemp in tempDataTable.Rows)
+                        {
+                            List<object> DataList = new List<object>();
+                            DataList.Add(drtemp["SystemClass"].ToString());
+                            DataList.Add(drtemp["SystemValue"].ToString());
+                            DataList.Add(drtemp["SystemTitle"].ToString());
+                            DataList.Add(drtemp["SystemNotation"].ToString());
+                            DataList.Add(drtemp["SystemRemark"].ToString());
+                            DataList.Add(drtemp["SystemStatus"].ToString());
+                            valSystemClass = drtemp["SystemClass"].ToString();
+                            valSystemValue = drtemp["SystemValue"].ToString();
+                            if (SystemDetailList.Where(x => x.oSystemClass == valSystemClass && x.oSystemValue == valSystemValue).Count() > 0)
+                            {
+                                sddModel.DataUpdate(DataList);
+                            }
+                            else
+                            {
+                                sddModel.DataUpdate(DataList);
+                            }
+                        }
+                    }
+                    List<oSystemDataDetail> SysDetailList = new List<oSystemDataDetail>();
+                    if (SysDetailList.Count > 0)
+                    {
+                        foreach (oSystemDataDetail item in SysDetailList)
+                        {
+                            showDetailData += string.Format(@"{0}~{1}~{2}~{3}~{4}~{5},br />"
+                                , item.oSystemClass, item.oSystemValue, item.oSystemTitle, item.oSystemNotation, item.oSystemRemark, item.oSystemStatus);
+                        }
+                    }
+                }                
             }
+            return Redirect("~/SystemDataDetail/Index");
         }
+
+
 
 
 
