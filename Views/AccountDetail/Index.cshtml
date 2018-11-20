@@ -1,6 +1,17 @@
-﻿@{
+﻿@using MvcDemand.Models
+@model AccountDetailModels
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+@using (Html.BeginForm("Index", "AccountDetail", FormMethod.Post, new { id = "form1" }))
+{
+    <div id="showList">
+        <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">使用帳號資料檔<hr /></td></tr>
+        </table>
+
+</div>
+    
+}
