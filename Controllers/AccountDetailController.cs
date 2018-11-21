@@ -45,10 +45,14 @@ namespace MvcDemand.Controllers
             ViewBag.valPageIndex = viewModel.valPageIndex;
             
             List<SelectListItem> listselAccClass = new List<SelectListItem>();
-            listselAccClass = sddModel.selObjSystemDataDetail("AccClass", "請選擇帳號類別");
+            listselAccClass = sddModel.selObjSystemDataDetail("AccClass", "請選擇帳號類別", "");
             ViewBag.selAccClass = listselAccClass;
-            ViewBag.selAccDeptNo = listselAccClass;
-            ViewBag.selAccJobNo = listselAccClass;
+            List<SelectListItem> listselDeptNo = new List<SelectListItem>();
+            listselDeptNo = sddModel.selObjSystemDataDetail("AccDeptNo", "請選擇所屬單位", "S"); 
+            ViewBag.selAccDeptNo = listselDeptNo;
+            List<SelectListItem> listselJobNo = new List<SelectListItem>();
+            listselJobNo = sddModel.selObjSystemDataDetail("AccJobNo", "請選擇帳號職稱", "D");
+            ViewBag.selAccJobNo = listselJobNo;
              
             return PartialView("List", viewModel);
         }

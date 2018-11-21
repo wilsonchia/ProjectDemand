@@ -76,15 +76,16 @@ namespace MvcDemand.Models
             return detailList;
         }
 
-        public List<SelectListItem> selObjSystemDataDetail(string fSystemClass, string fNullTitle) {
+        public List<SelectListItem> selObjSystemDataDetail(string fSystemClass, string fNullTitle, string funSort) {
             List<SelectListItem> rtnSelList = new List<SelectListItem>();
             List<oSystemDataDetail> SysList = new List<oSystemDataDetail>();
             try {
                 SysList = listObjSystemDataDetail().Where(x => x.oSystemClass == fSystemClass && x.oSystemStatus != "D").ToList();
+                if (funSort == "D") { SysList = SysList.OrderByDescending(e => e.oSystemValue).ToList(); }
                 rtnSelList.Add(new SelectListItem() { Value = "", Text = fNullTitle });
                 if (SysList.Count > 0) {
                     foreach (oSystemDataDetail item in SysList) {
-                        rtnSelList.Add(new SelectListItem() { Value = item.oSystemValue.ToString(), Text=item.oSystemTitle.ToString() });
+                        rtnSelList.Add(new SelectListItem() { Value = item.oSystemValue.ToString(), Text = (funSort == "S") ? item.oSystemValue.ToString() + " " + item.oSystemTitle.ToString() : item.oSystemTitle.ToString() });
                     }
                 }
             } catch (Exception ex) {

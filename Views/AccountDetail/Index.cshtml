@@ -4,6 +4,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <style>
     .modal {
         text-align: center;
@@ -70,13 +71,14 @@
 
     funcSelectChange = function () {
         var selValue = $('#dropExecute :selected').val();
-        $('#showDataCreate').hide(); $('#showDataUpdate').hide(); $('#showUpload').hide();
+        $('#showDataCreate').hide();  $('#showDataUpdate').hide();  $('#showUpload').hide();
         switch (selValue) {
             case "":
                 $('#showDataUpdate').fadeOut("slow");
                 break;
             case "N":
                 $('#showDataCreate').fadeIn("slow");
+                $("#textAccDateS").datepicker({ dateFormat: 'yy/mm/dd' });
                 break;
             case "U":
                 $('#showUpload').fadeIn("slow");
@@ -91,7 +93,7 @@
 
 </script>
 @using (Html.BeginForm("Index", "AccountDetail", FormMethod.Post, new { id = "form1" }))
-{
+{    
     <div id="showList">
         <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
             <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">使用帳號資料檔<hr /></td></tr>
@@ -121,8 +123,47 @@
             <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("List", Model);}</td></tr>
         </table>
     </div>
-
+    @Html.Hidden("hideAccIndex", "")
+    @Html.Hidden("hideAccNo", "")
+    @Html.Hidden("hideAccName", "")
+    @Html.Hidden("hideAccClass", "")
+    @Html.Hidden("hideAccDeptNo", "")
+    @Html.Hidden("hideAccJobNo", "")
+    @Html.Hidden("hideAccMobile", "")
+    @Html.Hidden("hideAccPhone", "")
+    @Html.Hidden("hideAccNotation", "")
+    @Html.Hidden("hideAccDataS", "")
+    @Html.Hidden("hideAccDateE", "")
+    @Html.Hidden("hideAccStatus", "")
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
+        <script type="text/javascript">
+
+            $(function ($) {
+                $('#selAccClass').change(funSelValueToHideValueA);
+                $('#selAccDeptNo').change(funSelValueToHideValueB);
+                $('#selAccJobNo').change(funSelValueToHideValueC);
+            });
+
+            funSelValueToHideValueA = function () {
+                if ($('#selAccClass :selected').val() != "") {
+                    $('#hideAccClass').val($('#selAccClass :selected').val());
+                }
+            }
+
+            funSelValueToHideValueB = function () {
+                if ($('#selAccDeptNo :selected').val() != "") {
+                    $('#hideAccDeptNo').val($('#selAccDeptNo :selected').val());
+                }
+            }
+
+            funSelValueToHideValueC = function () {
+                if ($('#selAccJobNo :selected').val() != "") {
+                    $('#hideAccJobNo').val($('#selAccJobNo :selected').val());
+                }
+            }
+
+        </script>
+
         <table class="modal_body" style="width:700px;" border="0" cellpadding="0" cellspacing="0">
             <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增使用帳號基本資料</td></tr>
             <tr style="height:30px">
@@ -155,13 +196,16 @@
             </tr>
             <tr style="height:30px">
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">備註說明</td>
-                <td style="width:600px; text-align:left" colspan="3">@Html.TextArea("textAccNotation", "", 5, 180, new { Style = "width:95%" })</td>
+                <td style="width:600px; text-align:left" colspan="3">
+                    @Html.TextArea("textAccNotation", "", 5, 180, new { Style = "width:95%" })                       
+                    <script>CKEDITOR.replace('textAccNotation')</script>
+                </td>
             </tr>
             <tr><td colspan="4"><span id="showMess"></span></td></tr>
             <tr style="height:30px">
                 <td style="width:100%; text-align:center" colspan="4">
                     <input type="button" id="btnFormC" value="確認新增" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" />
-                    <input type="button" id="btnCleanC" value="取消新增" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showCreate').hide();" />
+                    <input type="button" id="btnCleanC" value="取消新增" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showDataCreate').hide();" />
                 </td>
             </tr>
             <tr><td colspan="4"><br /></td></tr>
