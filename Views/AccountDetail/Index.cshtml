@@ -121,7 +121,7 @@
             <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("List", Model);}</td></tr>
         </table>
     </div>
-    
+
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
         <table class="modal_body" style="width:700px;" border="0" cellpadding="0" cellspacing="0">
             <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增使用帳號基本資料</td></tr>
@@ -133,19 +133,19 @@
             </tr>
             <tr style="height:30px">
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">帳號類別</td>
-                <td style="width:250px; text-align:left">@Html.DropDownList("selAccClass", null, new { Style = "width:90%; height:30px" })</td>
+                <td style="width:250px; text-align:left">@Html.DropDownList("selAccClass", (IEnumerable<SelectListItem>)ViewBag.selAccClass, new { Style = "width:90%; height:30px" })</td>
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">所屬單位</td>
-                <td style="width:250px; text-align:left">@Html.DropDownList("selAccDeptNo", null, new { Style = "width:90%; height:30px" })</td>
+                <td style="width:250px; text-align:left">@Html.DropDownList("selAccDeptNo", (IEnumerable<SelectListItem>)ViewBag.selAccDeptNo, new { Style = "width:90%; height:30px" })</td>
             </tr>
             <tr style="height:30px">
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">帳號職稱</td>
-                <td style="width:250px; text-align:left">@Html.DropDownList("selAccJobNo", null, new { Style = "width:90%; height:30px" })</td>
+                <td style="width:250px; text-align:left">@Html.DropDownList("selAccJobNo", (IEnumerable<SelectListItem>)ViewBag.selAccJobNo, new { Style = "width:90%; height:30px" })</td>
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">新增日期</td>
                 <td style="width:250px; text-align:left">@Html.TextBox("textAccDateS", "", new { Style = "width:90%; height:30px" })</td>
             </tr>
             <tr style="height:30px">
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">行動電話</td>
-                <td style="width:250px; text-align:left">@Html.TextBox("textAccMobile", "", new { Style = "width:90%; height:30px"})</td>
+                <td style="width:250px; text-align:left">@Html.TextBox("textAccMobile", "", new { Style = "width:90%; height:30px" })</td>
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">聯絡電話</td>
                 <td style="width:250px; text-align:left">@Html.TextBox("textAccPhone", "", new { Style = "width:90%; height:30px" })</td>
             </tr>
@@ -167,10 +167,10 @@
             <tr><td colspan="4"><br /></td></tr>
         </table>
     </div>
-    
+
     <div id="showDataUpdate" class="modalU" style="display:none; text-align:center">
 
     </div>
-       
-        
+
+
 }

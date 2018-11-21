@@ -1,17 +1,96 @@
-﻿@{
+﻿@using MvcDemand.Models
+@model AccountDetailModels
+@{
     Layout = null;
 }
 
-<!DOCTYPE html>
+<script type="text/javascript">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>List</title>
-</head>
-<body>
-    <div>
-        
-    </div>
-</body>
-</html>
+    FormPageFirst = function () { $('#hidePageIndex').val('1'); $('#form1').submit(); }
+    FormPageFinal = function () { $('#hidePageIndex').val($('#hidePageCount').val()); $('#form1').submit(); }
+    FormPagePrev = function () { $('#hidePageIndex').val(eval(eval($('#hidePageIndex').val()) - 1)); $('#form1').submit(); }
+    FormPageNext = function () { $('#hidePageIndex').val(eval(eval($('#hidePageIndex').val()) + 1)); $('#form1').submit(); }
+    FormPageSelect = function (newPageIndex) { $('#hidePageIndex').val(newPageIndex); $('#form1').submit(); }
+    funcDataShow = function (valClass) { $('#show_' + valClass + '').toggle("slow");}
+</script>
+@Html.Hidden("hideDataCount", (string)ViewBag.valCountSum)
+@Html.Hidden("hideRowPage", (string)ViewBag.valCountPage)
+@Html.Hidden("hidePageCount", (string)ViewBag.valPageCountSum)
+@Html.Hidden("hidePageIndex", (string)ViewBag.valPageIndex)
+@{
+    int DataIndexTop = 0;
+    if (Convert.ToInt32(ViewBag.valPageIndex) > 1) { DataIndexTop = Convert.ToInt32(Convert.ToInt32(ViewBag.valCountPage) * Convert.ToInt32(Convert.ToInt32(ViewBag.valPageIndex) - 1)); }
+    int DataIndexDown = 0;
+    if (Convert.ToInt32(ViewBag.valPageIndex) == 1)
+    {
+        if (Convert.ToInt32(ViewBag.valCountSum) < Convert.ToInt32(ViewBag.valCountPage))
+        {
+            DataIndexDown = Convert.ToInt32(ViewBag.valCountSum);
+        }
+        else
+        {
+            DataIndexDown = Convert.ToInt32(ViewBag.valCountPage);
+        }
+    }
+    else
+    {
+        if (Convert.ToInt32(Convert.ToInt32(ViewBag.valCountPage) * Convert.ToInt32(ViewBag.valPageIndex)) > Convert.ToInt32(ViewBag.valCountSum))
+        {
+            DataIndexDown = Convert.ToInt32(ViewBag.valCountSum);
+        }
+        else
+        {
+            DataIndexDown = Convert.ToInt32(Convert.ToInt32(ViewBag.valCountPage) * Convert.ToInt32(ViewBag.valPageIndex));
+        }
+    }
+}
+<table style="width:100%;" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td style="width:100%;" colspan="9">
+            頁數: @ViewBag.valPageIndex 頁 / @ViewBag.valPageCountSum 頁
+            <input type="submit" id="PageFirst" value="第一頁" style="width:70px; height:35px"
+                   @if (Convert.ToInt32(ViewBag.valPageIndex) == 1) { @Html.Raw("disabled")   ; } else { @Html.Raw("")   ; @Html.Raw("onclick='FormPageFirst()'")   ; } />
+            <input type="submit" id="PagePrev" value="上一頁" style="width:70px; height:35px"
+                   @if (Convert.ToInt32(ViewBag.valPageIndex) == 1) { @Html.Raw("disabled")    ; } else { @Html.Raw("")    ; @Html.Raw("onclick='FormPagePrev()'")    ; } />
+            <select id="PageSelect" style="width:70px; height:35px" onchange="FormPageSelect(this.value);">
+                @for (int i = 1; i <= Convert.ToInt32((string)ViewBag.valPageCountSum); i++) {
+                    <option value="@i.ToString()" @Html.Raw((Convert.ToInt32(ViewBag.valPageIndex) == Convert.ToInt32(i)) ? "selected" : "")>@i.ToString()</option>
+                    }
+            </select>
+            <input type="submit" id="PageNext" value="下一頁" style="width:70px; height:35px"
+                   @if (Convert.ToInt32(ViewBag.valPageIndex) == Convert.ToInt32(ViewBag.valPageCountSum)) { @Html.Raw("disabled")    ; } else { @Html.Raw("")    ; @Html.Raw("onclick='FormPageNext()'")    ; } />
+            <input type="submit" id="PageFinal" value="最末頁" style="width:70px; height:35px"
+                   @if (Convert.ToInt32(ViewBag.valPageIndex) == Convert.ToInt32(ViewBag.valPageCountSum)) { @Html.Raw("disabled")     ; } else { @Html.Raw("")     ; @Html.Raw("onclick='FormPageFinal()'")     ; } />
+            資料數: 共 @ViewBag.valCountSum 筆 / 每頁 @ViewBag.valCountPage 筆  / @DataIndexTop ~ @DataIndexDown
+        </td>
+    </tr>
+    <tr><td style="width:100%" colspan="9"><hr /></td></tr>
+    <tr style="height:35px; color:white;font-size:18px; background-color:blue">
+        <td style="width:75px; text-align:center">類別</td>
+        <td style="width:75px; text-align:center">參數值</td>
+        <td style="width:200px; text-align:center">標題</td>
+        <td style="width:175px; text-align:center">說明</td>
+        <td style="width:225px; text-align:center">備註</td>
+        <td style="width:50px; text-align:center">狀態</td>
+        <td style="width:100px; text-align:center" colspan="2">更新</td>
+    </tr>
+    <tr><td colspan="9"><hr /></td></tr>
+    @for (int i = DataIndexTop; i < DataIndexDown; i++)
+        {
+        <tr style="height:30px;font-size:14px;">
+            <td style="width:75px; text-align:left">@Model.viewAccountDetail[i].oAccNo.ToString()</td>
+            <td style="width:75px; text-align:center">@Model.viewAccountDetail[i].oAccName.ToString()</td>
+            <td style="width:200px; text-align:left">@Model.viewAccountDetail[i].oTitleAccClass.ToString()</td>
+            <td style="width:175px; text-align:left">@Model.viewAccountDetail[i].oTitleAccDeptNo.ToString()</td>
+            <td style="width:225px; text-align:left">@Model.viewAccountDetail[i].oTitleAccJobNo.ToString()</td>
+            <td style="width:50px; text-align:center">@Model.viewAccountDetail[i].oTitleAccStatus.ToString()</td>
+            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("新增", null, null, null, new { onclick = "$('#showCreate').fadeIn('show');SendDataCreate('" + Model.viewAccountDetail[i].oAccNo.ToString() + "')", href = "#" })</td>
+            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("明細", null, null, null, new { onclick = "funcDataShow('" + Model.viewAccountDetail[i].oAccNo.ToString() + "');", href = "#" })</td>
+        </tr>
+        <tr><td style="width:100%" colspan="9"><hr /></td></tr>        
+    }
+</table>
+
+
+
+

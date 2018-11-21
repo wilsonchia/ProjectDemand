@@ -206,9 +206,5 @@ namespace MvcDemand.Controllers
             return Redirect("~/SystemDataDetail/Index");
         }
 
-
-
-
-
     }
 }

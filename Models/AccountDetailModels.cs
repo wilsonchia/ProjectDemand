@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Data;
 using MvcDemand.Models;
 
@@ -12,8 +13,11 @@ namespace MvcDemand.Models
         ClassDataBase dbClass = new ClassDataBase();
         SystemDataDetailModels addModels = new SystemDataDetailModels();
 
-        List<oAccountDetail> viewAccountDetail = new List<oAccountDetail>();
-        List<oAccountDetail> detailAccountDetail = new List<oAccountDetail>();
+        public List<oAccountDetail> viewAccountDetail = new List<oAccountDetail>();
+        public List<oAccountDetail> detailAccountDetail = new List<oAccountDetail>();
+        public List<SelectListItem> selAccDeptNo = new List<SelectListItem>();
+        public List<SelectListItem> selAccJobNo = new List<SelectListItem>();
+        public List<SelectListItem> selAccClass = new List<SelectListItem>();
         public string valAccIndex { get; set; }
         public string valAccNo { get; set; }
         public string valAccName { get; set; }
@@ -56,40 +60,39 @@ namespace MvcDemand.Models
 
         public DataTable returnDataTable() {
             funDataTable.Clear(); funQuerySQL = ""; funDicParas = null;
-            funQuerySQL = "select a.*, sa.SystemTitle as titleDeptNo, sb.SystemTitle as titleJobNo, sb.SystemTitle as titleClass" 
-                        + " from AccountDetail a inner join SystemDataDetail sa on sa.systemclass='AccDeptNo' and sa.SystemValue=a.AccDeptNo "
+            funQuerySQL = "select a.*, sa.SystemTitle as titleDeptNo, sb.SystemTitle as titleJobNo, sb.SystemTitle as titleClass"
+                        + " from AccountDetail a inner join SystemDataDetail sa on sa.SystemClass='AccDeptNo' and sa.SystemValue=a.AccDeptNo "
                         + " inner join SystemDataDetail sb on sb.SystemClass='AccJobNo' and sb.SystemValue=a.AccJobNo "
-                        + " inner join SystemDataDetail sc on sc.SystemClass='AccClass' and sc.SystemValue = a.AccClass Where 1=1 ";
+                        + " inner join SystemDataDetail sc on sc.SystemClass='AccClass' and sc.SystemValue=a.AccClass Where 1=1 ";
             funDataTable = dbClass.msDataTableToDataBase(funQuerySQL, funDicParas);
             return funDataTable;
         }
 
         public List<oAccountDetail> listObjAccountDetail() {
-            List<oAccountDetail> rtnList = new List<oAccountDetail>();
-            funDataTable = null; funDataTable = returnDataTable();
-            foreach (DataRow dr in funDataTable.Rows)
-            {
-                oAccountDetail item = new oAccountDetail();
-                item.oAccIndex = dr["AccIndex"].ToString();
-                item.oAccNo = dr["AccNo"].ToString();
-                item.oAccName = dr["AccName"].ToString();
-                item.oAccClass = dr["AccClass"].ToString();
-                item.oAccDeptNo = dr["AccDeptNo"].ToString();
-                item.oAccJobNo = dr["AccJobNo"].ToString();
-                item.oAccMobile = dr["AccMobile"].ToString();
-                item.oAccPhone = dr["AccPhone"].ToString();
-                item.oAccEmail = dr["AccEmail"].ToString();
-                item.oAccPassword = dr["AccPassword"].ToString();
-                item.oAccNotation = dr["AccNotation"].ToString();
-                item.oAccImage = dr["AccImage"].ToString();
-                item.oAccDateS = dr["AccDateS"].ToString();
-                item.oAccDateE = dr["AccDateE"].ToString();
-                item.oAccStatus = dr["AccStatus"].ToString();
-                item.oTitleAccDeptNo = dr["titleDeptNo"].ToString();
-                item.oTitleAccJobNo = dr["titleJobNo"].ToString();
-                item.oTitleAccClass = dr["titleClass"].ToString();
-                item.oTitleAccStatus = (dr["AccStatus"].ToString() == "O") ? "啟用" : "停用";
-            }
+            //List<oAccountDetail> rtnList = new List<oAccountDetail>();
+            funDataTable = new DataTable(); funDataTable = returnDataTable();
+            var rtnList = (from dt in funDataTable.AsEnumerable()
+                       select new oAccountDetail {
+                           oAccIndex = dt.Field<string>("AccIndex").ToString(),
+                           oAccNo = dt.Field<string>("AccNo").ToString(),
+                           oAccName = dt.Field<string>("AccName").ToString(),
+                           oAccClass = dt.Field<string>("AccClass").ToString(),
+                           oAccDeptNo = dt.Field<string>("AccDeptNo").ToString(),
+                           oAccJobNo = dt.Field<string>("AccJobNo").ToString(),
+                           oAccMobile = dt.Field<string>("AccMobile").ToString(),
+                           oAccPhone = dt.Field<string>("AccPhone").ToString(),
+                           oAccEmail = dt.Field<string>("AccEmail").ToString(),
+                           oAccPassword = dt.Field<string>("AccPassword").ToString(),
+                           oAccNotation = dt.Field<string>("AccNotation").ToString(),
+                           oAccImage = dt.Field<string>("AccImage").ToString(),
+                           oAccDateS = dt.Field<string>("AccDateS").ToString(),
+                           oAccDateE = dt.Field<string>("AccDateE").ToString(),
+                           oAccStatus = dt.Field<string>("AccStatus").ToString(),
+                           oTitleAccDeptNo = dt.Field<string>("titleDeptNo").ToString(),
+                           oTitleAccJobNo = dt.Field<string>("titleJobNo").ToString(),
+                           oTitleAccClass = dt.Field<string>("titleClass").ToString(),
+                           oTitleAccStatus = (dt.Field<string>("AccStatus").ToString() == "O") ? "啟用" : "停用"
+                       }).ToList();            
             return rtnList;
         }
 
