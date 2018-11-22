@@ -64,11 +64,13 @@
 </style>
 <script type="text/javascript">
 
+    var baseURL = '@Html.Raw(Url.Content("~"))';
+    if (baseURL == '/') { baseURL = ""; }
+
     $(function ($) {
         $('#dropExecute').change(funcSelectChange);
     });
-
-
+    
     funcSelectChange = function () {
         var selValue = $('#dropExecute :selected').val();
         $('#showDataCreate').hide();  $('#showDataUpdate').hide();  $('#showUpload').hide();
@@ -123,43 +125,65 @@
             <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("List", Model);}</td></tr>
         </table>
     </div>
-    @Html.Hidden("hideAccIndex", "")
-    @Html.Hidden("hideAccNo", "")
-    @Html.Hidden("hideAccName", "")
-    @Html.Hidden("hideAccClass", "")
-    @Html.Hidden("hideAccDeptNo", "")
-    @Html.Hidden("hideAccJobNo", "")
-    @Html.Hidden("hideAccMobile", "")
-    @Html.Hidden("hideAccPhone", "")
-    @Html.Hidden("hideAccNotation", "")
-    @Html.Hidden("hideAccDataS", "")
-    @Html.Hidden("hideAccDateE", "")
-    @Html.Hidden("hideAccStatus", "")
+    @Html.Hidden("hideAccIndex", "")   @Html.Hidden("hideAccNo", "")
+    @Html.Hidden("hideAccName", "")   @Html.Hidden("hideAccClass", "")
+    @Html.Hidden("hideAccDeptNo", "")    @Html.Hidden("hideAccJobNo", "")
+    @Html.Hidden("hideAccMobile", "")    @Html.Hidden("hideAccPhone", "")
+    @Html.Hidden("hideAccNotation", "")    @Html.Hidden("hideAccDataS", "")
+    @Html.Hidden("hideAccDateE", "")    @Html.Hidden("hideAccStatus", "")
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
         <script type="text/javascript">
 
             $(function ($) {
-                $('#selAccClass').change(funSelValueToHideValueA);
-                $('#selAccDeptNo').change(funSelValueToHideValueB);
-                $('#selAccJobNo').change(funSelValueToHideValueC);
+                $('#textAccNo').blur(funCheckAccNoRepeat);
+                $('#textAccDateS').datepicker({ dateFormat: "yy/mm/dd" });
             });
 
-            funSelValueToHideValueA = function () {
-                if ($('#selAccClass :selected').val() != "") {
-                    $('#hideAccClass').val($('#selAccClass :selected').val());
-                }
+            funCheckAccNoRepeat = function () {
+                var vaAccNo = $('#textAccNo').val();
+                var funURL = baseURL + "/AccountDetail/checkAccNo";
+                var objData = { funAccNo: vaAccNo };
+                var rtnValue = "";
+                $.ajax({
+                    url: funURL,
+                    type: 'Post',
+                    data: objData,
+                    async: false,
+                    success: function (response) {
+                        rtnValue = response;
+                    },
+                    error: function (error, ajaxOption, thrownErrors) {
+                        rtnValue = error.responseText;
+                    }
+                });
+                if (rtnValue == "O") {
+                    $('#showMess').notify("該帳號重複!!請重新填入新的帳號!!");
+                    $('#textAccNo').val("");
+                    $('#textAccNo').focus();
+                }                
             }
-
-            funSelValueToHideValueB = function () {
-                if ($('#selAccDeptNo :selected').val() != "") {
+            
+            FormDataCreate = function () {
+                if ($('#textAccNo').val() == "") { $('#showMess').notify("帳號不得空白!!"); $('#textAccNo').focus(); return false; }
+                if ($('#textAccName').val() == "") { $('#showMess').notify("名稱不得空白!!"); $('#textAccName').focus(); return false; }
+                if ($('#selAccClass :selected').val() == "") {
+                    $('#showMess').notify("類別不得空白!!"); $('#selAccClass').focus(); return false;
+                } else { $('#hideAccClass').val($('#selAccClass :selected').val()); }
+                if ($('#selAccDeptNo :selected').val() == "") {
+                    $('#showMess').notify("單位不得空白!!"); $('#selAccDeptNo').focus(); return false;
+                } else {
                     $('#hideAccDeptNo').val($('#selAccDeptNo :selected').val());
                 }
-            }
-
-            funSelValueToHideValueC = function () {
-                if ($('#selAccJobNo :selected').val() != "") {
+                if ($('#selAccJobNo :selected').val() == "") {
+                    $('#showMess').notify("職稱不得空白!!"); $('#selAccJobNo').focus(); return false;
+                } else {
                     $('#hideAccJobNo').val($('#selAccJobNo :selected').val());
                 }
+                if ($('#textAccDateS').val() == "") { $('#showMess').notify("新增日期不得空白!!"); $('#textAccDateS').focus(); return false; }
+                if ($('#textAccMobile').val() == "") { $('#showMess').notify("行動電話不得空白!!"); $('#textAccMobile').focus(); return false; }
+                if ($('#textAccEmail').val() == "") { $('#showMess').notify("電子郵件不得空白!!"); $('#textAccEmail').focus(); return false; }
+                $('#form1').attr('action', 'AccountDetail/Create');
+                $('#form1').submit();
             }
 
         </script>

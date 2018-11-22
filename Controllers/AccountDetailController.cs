@@ -10,14 +10,10 @@ namespace MvcDemand.Controllers
 {
     public class AccountDetailController : Controller
     {
-
         AccountDetailModels adModel = new AccountDetailModels();
         SystemDataDetailModels sddModel = new SystemDataDetailModels();
         ClassDataBase dbClass = new ClassDataBase();
-
-        //
-        // GET: /AccountDetail/
-
+        
         public ActionResult Index(AccountDetailModels viewModel)
         {
             getBindData("", "1", viewModel);
@@ -55,6 +51,31 @@ namespace MvcDemand.Controllers
             ViewBag.selAccJobNo = listselJobNo;
              
             return PartialView("List", viewModel);
+        }
+
+        public string checkAccNo(string funAccNo)
+        {
+            string rtnValue = ""; int chkCount = 0;
+            chkCount = adModel.listObjAccountDetail().Where(x => x.oAccNo == funAccNo).Count();
+            rtnValue = (chkCount > 0) ? "O" : "X";                
+            return rtnValue;
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public RedirectResult Create(FormCollection form)
+        {
+            List<object> listDataCreate = new List<object>()
+            {
+                adModel.getNewAccIndex().ToString(), form["textAccNo"].ToString(),
+                form["textAccName"].ToString(), form["hideAccClass"].ToString(),
+                form["hideAccDeptNo"].ToString(), form["hideAccJobNo"].ToString(),
+                form["textAccMobile"].ToString(), form["textAccPhone"].ToString(),
+                form["textAccEmail"].ToString(), form["textAccMobile"].ToString(),
+                HttpUtility.HtmlEncode(form["textAccNotation"].ToString()),
+                "", form["textAccDateS"].ToString(),"","O" };
+            string fExecuteValue = adModel.DataCreate(listDataCreate);
+            return Redirect("~/AccountDetail/Index");
         }
 
     }

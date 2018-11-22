@@ -84,8 +84,12 @@
             <td style="width:175px; text-align:left">@Model.viewAccountDetail[i].oTitleAccDeptNo.ToString()</td>
             <td style="width:225px; text-align:left">@Model.viewAccountDetail[i].oTitleAccJobNo.ToString()</td>
             <td style="width:50px; text-align:center">@Model.viewAccountDetail[i].oTitleAccStatus.ToString()</td>
-            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("新增", null, null, null, new { onclick = "$('#showCreate').fadeIn('show');SendDataCreate('" + Model.viewAccountDetail[i].oAccNo.ToString() + "')", href = "#" })</td>
-            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("明細", null, null, null, new { onclick = "funcDataShow('" + Model.viewAccountDetail[i].oAccNo.ToString() + "');", href = "#" })</td>
+            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("修改", null, null, null, new { onclick = "$('#showCreate').fadeIn('show');SendDataCreate('" + Model.viewAccountDetail[i].oAccNo.ToString() + "')", href = "#" })</td>
+            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("刪除", null, null, null, new { onclick = "funcDataShow('" + Model.viewAccountDetail[i].oAccNo.ToString() + "');", href = "#" })</td>
+        </tr>
+        <tr>
+            <td style="width:75px; text-align:left">備註</td>
+            <td style="width:925px; text-align:left" colspan="6">@Html.Raw(HttpUtility.HtmlDecode(Model.viewAccountDetail[i].oAccNotation.ToString()))</td>
         </tr>
         <tr><td style="width:100%" colspan="9"><hr /></td></tr>        
     }

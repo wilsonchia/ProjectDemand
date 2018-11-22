@@ -103,6 +103,16 @@ namespace MvcDemand.Models
             return rtnList;
         }
 
+        public string getNewAccIndex()
+        {
+            funReturnValue = ""; funQuerySQL = ""; funDicParas = null; funDataTable = new DataTable(); 
+            funQuerySQL = "select left(replicate('0', 5-len(cast(max(accindex) as int)+1)) "
+                        + " + cast(cast(max(accindex) as int)+1 as varchar),5) as MaxIndex from AccountDetail";
+            funDataTable = dbClass.msDataTableToDataBase(funQuerySQL, funDicParas);
+            if (funDataTable.Rows.Count > 0) { funReturnValue = funDataTable.Rows[0]["MaxIndex"].ToString(); }
+            return funReturnValue;
+        }
+
         public string DataCreate(List<object> listDataCreate)
         {
             funExecuteValue = ""; funExecuteSQL = ""; funDicParas = null;
