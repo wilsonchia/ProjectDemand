@@ -63,10 +63,13 @@
 </style>
 <script type="text/javascript">
 
+    var baseURL = '@Html.Raw(Url.Content("~"))';
+    if (baseURL == '/') { baseURL = ""; }
+
     $(function ($) {
         $('#dropExecute').change(funcSelectChange);
     });
-    
+
 
     funcSelectChange = function () {
         var selValue = $('#dropExecute :selected').val();
@@ -86,17 +89,15 @@
         return false;
     }
 
-    FormExcelOut = function () { $('#form1').attr("action", "SystemDataDetail/OutToExecl"); $('#form1').submit(); }
+    FormExcelOut = function () { $('#form1').attr("action", baseURL + "/SystemDataDetail/OutToExecl"); $('#form1').submit(); }
 
     FormExcelUpload = function () {
         if ($('#fileUpload').val() == "") {
-            $.notify("上傳檔案不得空白!!");
-            $('#fileUpload').focus();
-            return false;
+            $.notify("上傳檔案不得空白!!"); $('#fileUpload').focus(); return false;
         } else {
-            $('#form1').attr("action", "SystemDataDetail/Upload");
+            $('#form1').attr("action", baseURL + "/SystemDataDetail/Upload");
             $('#form1').submit();
-        }        
+        }
     }
 
 </script>

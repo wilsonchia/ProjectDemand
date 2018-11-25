@@ -93,6 +93,17 @@
         return false;
     }
 
+    FormExcelOut = function () { $('#form1').attr("action", baseURL + "/AccountDetail/OutToExcel"); $('#form1').submit(); }
+
+    FormExcelUpload = function () {
+        if ($('#fileUpload').val() == "") {
+            $.notify("上傳檔案不得空白!!"); $('#fileUpload').focus(); return false;
+        } else {
+            $('#form1').attr("action", baseURL + "/AccountDetail/Upload");
+            $('#form1').submit();
+        }
+    }
+
 </script>
 @using (Html.BeginForm("Index", "AccountDetail", FormMethod.Post, new { id = "form1" }))
 {    
@@ -129,8 +140,10 @@
     @Html.Hidden("hideAccName", "")   @Html.Hidden("hideAccClass", "")
     @Html.Hidden("hideAccDeptNo", "")    @Html.Hidden("hideAccJobNo", "")
     @Html.Hidden("hideAccMobile", "")    @Html.Hidden("hideAccPhone", "")
-    @Html.Hidden("hideAccNotation", "")    @Html.Hidden("hideAccDataS", "")
+    @Html.Hidden("hideAccNotation", "")    @Html.Hidden("hideAccDateS", "")
     @Html.Hidden("hideAccDateE", "")    @Html.Hidden("hideAccStatus", "")
+    @Html.Hidden("hideAccNotationS", "")  @Html.Hidden("hideAccPassword")
+    
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
         <script type="text/javascript">
 
@@ -182,7 +195,8 @@
                 if ($('#textAccDateS').val() == "") { $('#showMess').notify("新增日期不得空白!!"); $('#textAccDateS').focus(); return false; }
                 if ($('#textAccMobile').val() == "") { $('#showMess').notify("行動電話不得空白!!"); $('#textAccMobile').focus(); return false; }
                 if ($('#textAccEmail').val() == "") { $('#showMess').notify("電子郵件不得空白!!"); $('#textAccEmail').focus(); return false; }
-                $('#form1').attr('action', 'AccountDetail/Create');
+                if (CKEDITOR.instances.textAccNotation.getData() != "") { $('#hideAccNotationS').val(CKEDITOR.instances.textAccNotation.getData()); }
+                $('#form1').attr('action', baseURL + '/AccountDetail/Create');
                 $('#form1').submit();
             }
 
@@ -234,11 +248,9 @@
             </tr>
             <tr><td colspan="4"><br /></td></tr>
         </table>
-    </div>
-
-    <div id="showDataUpdate" class="modalU" style="display:none; text-align:center">
 
     </div>
+    
 
 
 }

@@ -17,7 +17,6 @@ namespace MvcDemand.Controllers
         SystemDataDetailModels sddModel = new SystemDataDetailModels();
         ClassDataBase dbClass = new ClassDataBase();
 
-
         public ActionResult Index(SystemDataDetailModels viewModel)
         {
             GetBindData("", "1", viewModel);
@@ -95,7 +94,7 @@ namespace MvcDemand.Controllers
         {
             List<string> listColumn = new List<string>() { "SystemClass", "systemValue", "SystemTitle", "SystemNotation", "SystemRemark", "SystemStatus" };
             List<oSystemDataDetail> systemDetailList = new List<oSystemDataDetail>(); systemDetailList = sddModel.listObjSystemDataDetail();
-            string FileName = "Data.xlsx"; string SheetName = "Data"; Response.Clear();
+            string FileName = "SystemData.xlsx"; string SheetName = "Data"; Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             XSSFWorkbook NpoiWB = new XSSFWorkbook();
 
@@ -138,7 +137,7 @@ namespace MvcDemand.Controllers
             string showDetailData = ""; DataTable dtSystemDetail = new DataTable();
             if (fileUpload != null && fileUpload.ContentLength > 0)
             {
-                string FilePath = System.Web.HttpContext.Current.Server.MapPath("~/excel");
+                string FilePath = System.Web.HttpContext.Current.Server.MapPath("../excel");
                 string FileName = fileUpload.FileName;
                 fileUpload.SaveAs(string.Format(@"{0}\{1}", FilePath, FileName));
                 dynamic hssfweb; DataTable tempDataTable = new DataTable(); tempDataTable.Clear();

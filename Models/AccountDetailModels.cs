@@ -52,15 +52,15 @@ namespace MvcDemand.Models
         public List<string> aryColumnName = new List<string>() { 
             "AccIndex", "AccNo", "AccName", "AccClass", "AccDeptNo"
             , "AccJobNo" , "AccMobile", "AccPhone", "AccEmail",  "AccPassword"
-            , "AccNotation", "AccImage", "AccDateS", "AccDateE", "AccStatus" };
+            , "AccNotation", "AccImage", "AccDateS", "AccDateE", "AccStatus", "AccNotationS" };
         public List<string> aryDeclareName = new List<string>() { 
             "@AccIndex", "@AccNo", "@AccName", "@AccClass", "@AccDeptNo"
             , "@AccJobNo" , "@AccMobile", "@AccPhone", "@AccEmail",  "@AccPassword"
-            , "@AccNotation", "@AccImage", "@AccDateS", "@AccDateE", "@AccStatus" };
+            , "@AccNotation", "@AccImage", "@AccDateS", "@AccDateE", "@AccStatus","@AccNotationS" };
 
         public DataTable returnDataTable() {
             funDataTable.Clear(); funQuerySQL = ""; funDicParas = null;
-            funQuerySQL = "select a.*, sa.SystemTitle as titleDeptNo, sb.SystemTitle as titleJobNo, sb.SystemTitle as titleClass"
+            funQuerySQL = "select a.*, sa.SystemTitle as titleDeptNo, sb.SystemTitle as titleJobNo, sc.SystemTitle as titleClass"
                         + " from AccountDetail a inner join SystemDataDetail sa on sa.SystemClass='AccDeptNo' and sa.SystemValue=a.AccDeptNo "
                         + " inner join SystemDataDetail sb on sb.SystemClass='AccJobNo' and sb.SystemValue=a.AccJobNo "
                         + " inner join SystemDataDetail sc on sc.SystemClass='AccClass' and sc.SystemValue=a.AccClass Where 1=1 ";
@@ -68,8 +68,7 @@ namespace MvcDemand.Models
             return funDataTable;
         }
 
-        public List<oAccountDetail> listObjAccountDetail() {
-            //List<oAccountDetail> rtnList = new List<oAccountDetail>();
+        public List<oAccountDetail> listObjAccountDetail() {            
             funDataTable = new DataTable(); funDataTable = returnDataTable();
             var rtnList = (from dt in funDataTable.AsEnumerable()
                        select new oAccountDetail {
@@ -91,7 +90,8 @@ namespace MvcDemand.Models
                            oTitleAccDeptNo = dt.Field<string>("titleDeptNo").ToString(),
                            oTitleAccJobNo = dt.Field<string>("titleJobNo").ToString(),
                            oTitleAccClass = dt.Field<string>("titleClass").ToString(),
-                           oTitleAccStatus = (dt.Field<string>("AccStatus").ToString() == "O") ? "啟用" : "停用"
+                           oTitleAccStatus = (dt.Field<string>("AccStatus").ToString() == "O") ? "啟用" : "停用",
+                           oAccNotationS = dt.Field<string>("AccNotationS").ToString() 
                        }).ToList();            
             return rtnList;
         }
@@ -176,6 +176,7 @@ namespace MvcDemand.Models
         public string oAccEmail { get; set; }
         public string oAccPassword { get; set; }
         public string oAccNotation { get; set; }
+        public string oAccNotationS { get; set; }
         public string oAccImage { get; set; }
         public string oAccDateS { get; set; }
         public string oAccDateE { get; set; }

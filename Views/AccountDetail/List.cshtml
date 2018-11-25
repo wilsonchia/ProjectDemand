@@ -3,15 +3,88 @@
 @{
     Layout = null;
 }
+<style>
+    .modalU {
+        text-align: center;
+        position: fixed;
+        z-index: 1;
+        top: 5%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        font-size: 100%;
+        background-color: rgba(0,0,0,0.6) !important;
+    }
 
+    .modalU_body {
+        text-align: center;
+        position: absolute;
+        background-color: #F6F6F6;
+        /*background-color: white;*/
+        /*width:90%;*/
+        /*width: 870px;*/
+        top: 10%;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: solid;
+        border-color: #2E6E9E;
+    }
+</style>
 <script type="text/javascript">
+
+    var baseURL = '@Html.Raw(Url.Content("~"))';
+    if (baseURL == '/') { baseURL = ""; }
 
     FormPageFirst = function () { $('#hidePageIndex').val('1'); $('#form1').submit(); }
     FormPageFinal = function () { $('#hidePageIndex').val($('#hidePageCount').val()); $('#form1').submit(); }
     FormPagePrev = function () { $('#hidePageIndex').val(eval(eval($('#hidePageIndex').val()) - 1)); $('#form1').submit(); }
     FormPageNext = function () { $('#hidePageIndex').val(eval(eval($('#hidePageIndex').val()) + 1)); $('#form1').submit(); }
     FormPageSelect = function (newPageIndex) { $('#hidePageIndex').val(newPageIndex); $('#form1').submit(); }
-    funcDataShow = function (valClass) { $('#show_' + valClass + '').toggle("slow");}
+    funcDataShow = function (valClass) { $('#show_' + valClass + '').toggle("slow"); }
+
+    SendValueToFormUpdate = function (funAccIndex, funAccNo) {
+        var rtnValue = "";
+        var URL = baseURL + "AccountDetail/FormUpdate";
+        var objData = { fAccIndex: funAccIndex, fAccNo: funAccNo };
+        $.ajax({
+            url: URL,
+            type: 'Post',
+            data: objData,
+            datatype: 'json',
+            async: false,
+            success: function (response) {
+                rtnValue = response;
+            },
+            error: function (err, ajaxOption, thrownErrors) {
+                rtnValue = err.responseText;
+            }
+        });
+
+        $('#hideAccIndex').val(rtnValue["oAccIndex"]); $('#hideAccNo').val(rtnValue["oAccNo"]);
+        $('#hideAccName').val(rtnValue["oAccName"]); $('#hideAccClass').val(rtnValue["oAccClass"]);
+        $('#hideAccDeptNo').val(rtnValue["oAccDeptNo"]); $('#hideAccJobNo').val(rtnValue["oAccJobNo"]);
+        $('#hideAccMobile').val(rtnValue["oAccMobile"]); $('#hideAccPhone').val(rtnValue["oAccPhone"]);
+        $('#hideAccEmail').val(rtnValue["oAccEmail"]); $('#hideAccNotation').val(rtnValue["oAccNotation"]);
+        $('#hideAccStatus').val(rtnValue["oAccStatus"]); $('#hideAccDateS').val(rtnValue["oAccDateS"]);
+        $('#hideAccDateE').val(rtnValue["oAccDateE"]); 
+        $('#showoAccNo').html(rtnValue["oAccNo"]); $('#showDateS').html(rtnValue["oAccDateS"]);
+        $('#textAccNameU').val(rtnValue["oAccName"]); $('#textAccMobileU').val(rtnValue["oAccMobile"]);
+        $('#textAccPhoneU').val(rtnValue["oAccPhone"]); $('#textAccEmailU').val(rtnValue["oAccEmail"]);
+        $('#textAccDateE').val(rtnValue["oAccDateE"]);
+        $('#selAccClassU option').filter('[value="' + rtnValue["oAccClass"] + '"]').attr("selected", true);
+        $('#selAccDeptNoU option').filter('[value="' + rtnValue["oAccDeptNo"] + '"]').attr("selected", true);
+        $('#selAccJobNoU option').filter('[value="' + rtnValue["oAccJobNo"] + '"]').attr("selected", true);
+        $('#textAccDateEU').datepicker({ dateFormat: "yy/mm/dd" });
+        $('#hideAccPassword').val(rtnValue["oAccPassword"]);
+        if (rtnValue["oAccStatus"] == "O") { $('#checkAccStatusU').prop('checked', true); } else { $('#checkAccStatus').prop('checked', false); }
+        CKEDITOR.instances.textAccNotationU.setData(rtnValue["oAccNotationS"]);
+        $('#textAccNameU').focus();
+        return false;
+    }
+
+
 </script>
 @Html.Hidden("hideDataCount", (string)ViewBag.valCountSum)
 @Html.Hidden("hideRowPage", (string)ViewBag.valCountPage)
@@ -44,9 +117,10 @@
         }
     }
 }
+
 <table style="width:100%;" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td style="width:100%;" colspan="9">
+        <td style="width:100%;" colspan="11">
             頁數: @ViewBag.valPageIndex 頁 / @ViewBag.valPageCountSum 頁
             <input type="submit" id="PageFirst" value="第一頁" style="width:70px; height:35px"
                    @if (Convert.ToInt32(ViewBag.valPageIndex) == 1) { @Html.Raw("disabled")   ; } else { @Html.Raw("")   ; @Html.Raw("onclick='FormPageFirst()'")   ; } />
@@ -64,36 +138,132 @@
             資料數: 共 @ViewBag.valCountSum 筆 / 每頁 @ViewBag.valCountPage 筆  / @DataIndexTop ~ @DataIndexDown
         </td>
     </tr>
-    <tr><td style="width:100%" colspan="9"><hr /></td></tr>
+    <tr><td style="width:100%" colspan="11"><hr /></td></tr>
     <tr style="height:35px; color:white;font-size:18px; background-color:blue">
-        <td style="width:75px; text-align:center">類別</td>
-        <td style="width:75px; text-align:center">參數值</td>
-        <td style="width:200px; text-align:center">標題</td>
-        <td style="width:175px; text-align:center">說明</td>
-        <td style="width:225px; text-align:center">備註</td>
-        <td style="width:50px; text-align:center">狀態</td>
+        <td style="width:100px; text-align:center">序號</td>
+        <td style="width:100px; text-align:center">帳號</td>
+        <td style="width:100px; text-align:center">姓名</td>
+        <td style="width:100px; text-align:center">類別</td>
+        <td style="width:100px; text-align:center">單位</td>
+        <td style="width:100px; text-align:center">職稱</td>        
+        <td style="width:100px; text-align:center">行動電話<br />聯絡電話</td>
+        <td style="width:100px; text-align:center">狀態</td>
+        <td style="width:100px; text-align:center">啟用日期<br />停用日期</td>
         <td style="width:100px; text-align:center" colspan="2">更新</td>
     </tr>
-    <tr><td colspan="9"><hr /></td></tr>
+    <tr><td colspan="11"><hr /></td></tr>
     @for (int i = DataIndexTop; i < DataIndexDown; i++)
         {
         <tr style="height:30px;font-size:14px;">
-            <td style="width:75px; text-align:left">@Model.viewAccountDetail[i].oAccNo.ToString()</td>
-            <td style="width:75px; text-align:center">@Model.viewAccountDetail[i].oAccName.ToString()</td>
-            <td style="width:200px; text-align:left">@Model.viewAccountDetail[i].oTitleAccClass.ToString()</td>
-            <td style="width:175px; text-align:left">@Model.viewAccountDetail[i].oTitleAccDeptNo.ToString()</td>
-            <td style="width:225px; text-align:left">@Model.viewAccountDetail[i].oTitleAccJobNo.ToString()</td>
-            <td style="width:50px; text-align:center">@Model.viewAccountDetail[i].oTitleAccStatus.ToString()</td>
-            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("修改", null, null, null, new { onclick = "$('#showCreate').fadeIn('show');SendDataCreate('" + Model.viewAccountDetail[i].oAccNo.ToString() + "')", href = "#" })</td>
-            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("刪除", null, null, null, new { onclick = "funcDataShow('" + Model.viewAccountDetail[i].oAccNo.ToString() + "');", href = "#" })</td>
+            <td style="width:100px; text-align:center">@Model.viewAccountDetail[i].oAccIndex.ToString()</td>
+            <td style="width:100px; text-align:left">@Model.viewAccountDetail[i].oAccNo.ToString()</td>
+            <td style="width:100px; text-align:center">@Model.viewAccountDetail[i].oAccName.ToString()</td>
+            <td style="width:100px; text-align:left">@Model.viewAccountDetail[i].oTitleAccClass.ToString()</td>
+            <td style="width:100px; text-align:left">@Model.viewAccountDetail[i].oTitleAccDeptNo.ToString()</td>
+            <td style="width:100px; text-align:left">@Model.viewAccountDetail[i].oTitleAccJobNo.ToString()</td>
+            <td style="width:100px; text-align:center">@Model.viewAccountDetail[i].oAccMobile.ToString() <br /> @Model.viewAccountDetail[i].oAccPhone.ToString()</td>
+            <td style="width:100px; text-align:center">@Model.viewAccountDetail[i].oTitleAccStatus.ToString()</td>
+            <td style="width:100px; text-align:center">@Model.viewAccountDetail[i].oAccDateS.ToString() <br /> @Model.viewAccountDetail[i].oAccDateE.ToString()</td>
+            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">@Html.ActionLink("修改", null, null, null, new { onclick = "$('#showDataUpdate').fadeIn('show');SendValueToFormUpdate('" + Model.viewAccountDetail[i].oAccIndex.ToString() + "','" + Model.viewAccountDetail[i].oAccNo.ToString() + "');", href = "#" })</td>
+            <td style="width:50px; text-align:center; background-color:#5F9EA0; font-weight:bold">刪除</td>
         </tr>
-        <tr>
-            <td style="width:75px; text-align:left">備註</td>
-            <td style="width:925px; text-align:left" colspan="6">@Html.Raw(HttpUtility.HtmlDecode(Model.viewAccountDetail[i].oAccNotation.ToString()))</td>
-        </tr>
-        <tr><td style="width:100%" colspan="9"><hr /></td></tr>        
-    }
+        if (@Model.viewAccountDetail[i].oAccNotation.ToString() != "")
+            {
+                @:<tr>
+                    @:<td style="width:100px; text-align:left">備註</td>
+                    @:<td style="width:900px; text-align:left" colspan="10">@Html.Raw(HttpUtility.HtmlDecode(Model.viewAccountDetail[i].oAccNotation.ToString()))</td>
+                @:</tr>
+          }
+        <tr><td style="width:100%" colspan="11"><hr /></td></tr>        
+        }
 </table>
+
+<div id="showDataUpdate" class="modalU" style="display:none; text-align:center">
+    <script type="text/javascript">
+
+        FormDataUpdate = function () {
+            if ($('#textAccNoU').val() == "") { $('#showMessU').notify("帳號不得空白!!"); $('#textAccNoU').focus(); return false; }
+            if ($('#textAccNameU').val() == "") { $('#showMessU').notify("名稱不得空白!!"); $('#textAccNameU').focus(); return false; }
+            if ($('#selAccClassU :selected').val() == "") {
+                $('#showMessU').notify("類別不得空白!!"); $('#selAccClassU').focus(); return false;
+            } else { $('#hideAccClass').val($('#selAccClassU :selected').val()); }
+            if ($('#selAccDeptNoU :selected').val() == "") {
+                $('#showMessU').notify("單位不得空白!!"); $('#selAccDeptNoU').focus(); return false;
+            } else {
+                $('#hideAccDeptNo').val($('#selAccDeptNoU :selected').val());
+            }
+            if ($('#selAccJobNoU :selected').val() == "") {
+                $('#showMessU').notify("職稱不得空白!!"); $('#selAccJobNoU').focus(); return false;
+            } else {
+                $('#hideAccJobNo').val($('#selAccJobNoU :selected').val());
+            }
+            if ($('#checkAccStatusU').attr('checked') == true) {
+                $('#hideAccStatus').val("X");
+            } else {
+                $('#hideAccStatus').val("O");
+            }
+            if ($('#textAccMobileU').val() == "") { $('#showMessU').notify("行動電話不得空白!!"); $('#textAccMobileU').focus(); return false; }
+            if ($('#textAccEmailU').val() == "") { $('#showMessU').notify("電子郵件不得空白!!"); $('#textAccEmailU').focus(); return false; }
+            if (CKEDITOR.instances.textAccNotation.getData() != "") { $('#hideAccNotationS').val(CKEDITOR.instances.textAccNotation.getData()); }
+            $('#form1').attr('action', baseURL + '/AccountDetail/Update');
+            $('#form1').submit();
+        }
+
+    </script>
+    <table class="modal_body" style="width:700px;" border="0" cellpadding="0" cellspacing="0">
+        <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">修改使用帳號基本資料</td></tr>
+        <tr style="height:30px">
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">使用帳號</td>
+            <td style="width:250px; text-align:left"><span id="showoAccNo"></span></td>
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">帳號名稱</td>
+            <td style="width:250px; text-align:left">@Html.TextBox("textAccNameU", "", new { Style = "width:90%; height:30px" })</td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">帳號類別</td>
+            <td style="width:250px; text-align:left">@Html.DropDownList("selAccClassU", (IEnumerable<SelectListItem>)ViewBag.selAccClass, new { Style = "width:90%; height:30px" })</td>
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">所屬單位</td>
+            <td style="width:250px; text-align:left">@Html.DropDownList("selAccDeptNoU", (IEnumerable<SelectListItem>)ViewBag.selAccDeptNo, new { Style = "width:90%; height:30px" })</td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">帳號職稱</td>
+            <td style="width:250px; text-align:left">@Html.DropDownList("selAccJobNoU", (IEnumerable<SelectListItem>)ViewBag.selAccJobNo, new { Style = "width:90%; height:30px" })</td>
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">使用狀態<br />停用日期</td>
+            <td style="width:250px; text-align:left">
+                @Html.CheckBox("checkAccStatusU", true) 啟用 <span id="showDateS"></span><br />
+                @Html.TextBox("textAccDateE", "", new { Style = "width:90%; height:30px" })
+            </td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">行動電話</td>
+            <td style="width:250px; text-align:left">@Html.TextBox("textAccMobileU", "", new { Style = "width:90%; height:30px" })</td>
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">聯絡電話</td>
+            <td style="width:250px; text-align:left">@Html.TextBox("textAccPhoneU", "", new { Style = "width:90%; height:30px" })</td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">電子郵件</td>
+            <td style="width:600px; text-align:left" colspan="3">@Html.TextBox("textAccEmailU", "", new { Style = "width:95%; height:30px" })</td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white; font-weight:bold">備註說明</td>
+            <td style="width:600px; text-align:left" colspan="3">
+                @Html.TextArea("textAccNotationU", "", 5, 180, new { Style = "width:95%" })
+                <script>CKEDITOR.replace('textAccNotationU')</script>
+            </td>
+        </tr>
+        <tr><td colspan="4"><span id="showMessU"></span></td></tr>
+        <tr style="height:30px">
+            <td style="width:100%; text-align:center" colspan="4">
+                <input type="button" id="btnFormU" value="確認修改" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataUpdate();" />
+                <input type="button" id="btnCleanU" value="取消修改" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showDataUpdate').hide();" />
+            </td>
+        </tr>
+        <tr><td colspan="4"><br /></td></tr>
+    </table>
+</div>
+
+
+
+
 
 
 
