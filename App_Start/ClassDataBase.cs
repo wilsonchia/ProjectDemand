@@ -97,6 +97,95 @@ namespace MvcDemand
             }
             return msDicPara;
         }
+
+        public string ReturnDetailToNowDateTime(string ReturnShowClass)
+        {
+            string ReturnYear, ReturnMonth, ReturnDay, ReturnHour;
+            string ReturnMinute, ReturnSecond, ReturnWeekEnd, ReturnShowDate;
+            string ReturnWeekEndTitle, ReturnShowDetailValue, ReturnYearC;
+            ReturnShowDetailValue = ""; ReturnShowDate = ""; ReturnWeekEndTitle = "";
+            ReturnYear = DateTime.Now.Year.ToString();
+            ReturnMonth = DateTime.Now.Month.ToString().PadLeft(2, '0');
+            ReturnDay = DateTime.Now.Day.ToString().PadLeft(2, '0');
+            ReturnHour = DateTime.Now.Hour.ToString().PadLeft(2, '0');
+            ReturnMinute = DateTime.Now.Minute.ToString().PadLeft(2, '0');
+            ReturnSecond = DateTime.Now.Second.ToString().PadLeft(2, '0');
+            ReturnWeekEnd = DateTime.Now.DayOfWeek.GetHashCode().ToString();
+            ReturnYearC = Convert.ToString(Convert.ToInt32(ReturnYear) - Convert.ToInt32(1911));
+
+            switch (ReturnWeekEnd)
+            {
+                case "0": ReturnWeekEndTitle = "（週日）"; break;
+                case "1": ReturnWeekEndTitle = "（週一）"; break;
+                case "2": ReturnWeekEndTitle = "（週二）"; break;
+                case "3": ReturnWeekEndTitle = "（週三）"; break;
+                case "4": ReturnWeekEndTitle = "（週四）"; break;
+                case "5": ReturnWeekEndTitle = "（週五）"; break;
+                case "6": ReturnWeekEndTitle = "（週六）"; break;
+            }
+            switch (ReturnShowClass)
+            {
+                case "VF": ReturnShowDate = ReturnYear + ReturnMonth + ReturnDay + ReturnHour + ReturnMinute + ReturnSecond; break;
+                case "VD": ReturnShowDate = ReturnYear + ReturnMonth + ReturnDay; break;
+                case "VT": ReturnShowDate = ReturnHour + ReturnMinute + ReturnDay; break;
+                case "SF": ReturnShowDate = ReturnYear + "/" + ReturnMonth + "/" + ReturnDay + "  " + ReturnHour + ":" + ReturnMinute + ":" + ReturnSecond; break;
+                case "SD": ReturnShowDate = ReturnYear + "/" + ReturnMonth + "/" + ReturnDay; break;
+                case "ST": ReturnShowDate = ReturnHour + ":" + ReturnMinute + ":" + ReturnSecond; break;
+                case "SC": ReturnShowDate = "中華民國" + ReturnYearC + "年" + ReturnMonth + "月" + ReturnDay + "日"; break;
+                case "SW": ReturnShowDate = "中華民國" + ReturnYearC + "年" + ReturnMonth + "月" + ReturnDay + "日" + ReturnWeekEndTitle; break;
+            }
+            ReturnShowDetailValue = ReturnShowDate;
+            return ReturnShowDetailValue;
+        }
+
+        public string ReturnToRandomValue(string funStrValue, int RanLen)
+        {
+            string rtnValue = "";
+
+
+            return rtnValue;
+        }
+
+        public string msExecuteDataBase(string execClass, string execTableName, int chkLen, List<string> aryDeclareName, List<object> aryDeclareValue)
+        {
+            string rtnExecValue = ""; string funExecuteSQL = "";
+            Dictionary<string, object> funDicPara = new Dictionary<string, object>();
+            funDicPara = GetListToNewDictionary(aryDeclareName, aryDeclareValue);
+            switch (execClass)
+            {
+                case "N":
+                        funExecuteSQL = string.Format(@" Insert Into {0} Values ( ", execTableName);
+                        for (int i = 0; i < aryDeclareName.Count; i++) { funExecuteSQL += string.Format(@" {0}{1}", aryDeclareName[i], (i < aryDeclareName.Count() - 1) ? "," : ""); }
+                        funExecuteSQL += string.Format(@" ) ");
+                    break;
+                case "U":
+                        funExecuteSQL = string.Format(@" Update {0} Set ", execTableName);
+                        for (int i = chkLen; i < aryDeclareName.Count; i++) {
+                            funExecuteSQL += string.Format(@" {0}={1} {2}", aryDeclareName[i].Replace('@', ' '), aryDeclareName[i], (i < aryDeclareName.Count() - 1) ? " and " : "");
+                        }
+                        funExecuteSQL += string.Format(@" where ");
+                        for (int i = 0; i < chkLen; i++) {
+                            funExecuteSQL += string.Format(@" {0}={1} {2}", aryDeclareName[i].Replace('@', ' '), aryDeclareName[i], (i < chkLen - 1) ? " and " : "");
+                        }
+                    break;
+                case "D":
+                        funExecuteSQL = string.Format(@" Delete from {0} where ", execTableName);
+                        for (int i = 0; i < aryDeclareName.Count; i++) {
+                            funExecuteSQL += string.Format(@" {0}={1} {2}", aryDeclareName[i].Replace('@', ' '), aryDeclareName[i], (i < aryDeclareName.Count() - 1) ? " and " : "");
+                        }
+                    break;
+            }
+            SqlConnection conn = new SqlConnection(msConnValue); conn.Open();
+            SqlCommand comm = new SqlCommand(funExecuteSQL, conn);
+            if (funDicPara != null) {
+                foreach (KeyValuePair<string, object> item in funDicPara) {
+                    comm.Parameters.AddWithValue(item.Key.ToString(), item.Value.ToString());
+                }
+            }
+            rtnExecValue = (comm.ExecuteNonQuery() == 1) ? "O" : "X";
+            return rtnExecValue;
+        }
+
         
     }
 }
