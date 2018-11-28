@@ -18,6 +18,10 @@ namespace MvcDemand.Controllers
         AccountDetailModels adModel = new AccountDetailModels();
         SystemDataDetailModels sddModel = new SystemDataDetailModels();
         ClassDataBase dbClass = new ClassDataBase();
+        public List<string> aryDeclareName = new List<string>() { 
+            "@AccIndex", "@AccNo", "@AccName", "@AccClass", "@AccDeptNo"
+            , "@AccJobNo" , "@AccMobile", "@AccPhone", "@AccEmail",  "@AccPassword"
+            , "@AccNotation", "@AccImage", "@AccDateS", "@AccDateE", "@AccStatus","@AccNotationS" };
         
         public ActionResult Index(AccountDetailModels viewModel)
         {
@@ -79,7 +83,7 @@ namespace MvcDemand.Controllers
                 form["textAccEmail"].ToString(), form["textAccMobile"].ToString(),
                 HttpUtility.HtmlEncode(form["textAccNotation"].ToString()), "",
                 form["textAccDateS"].ToString(), "", "O", form["hideAccNotationS"].ToString() };
-            string fExecuteValue = adModel.DataCreate(listDataCreate);
+            string fExecuteValue = dbClass.msExecuteDataBase("N", "AccountDetail", 0, aryDeclareName, listDataCreate);            
             return Redirect("~/AccountDetail/Index");
         }
 
@@ -115,7 +119,7 @@ namespace MvcDemand.Controllers
             listDataUpdate.Add(form["textAccDateE"].ToString());
             listDataUpdate.Add(form["hideAccStatus"].ToString());
             listDataUpdate.Add(form["hideAccNotationS"].ToString());
-            string fExecuteValue = adModel.DataUpdate(listDataUpdate);
+            string fExecuteValue = dbClass.msExecuteDataBase("U", "AccountDetail", 2, aryDeclareName, listDataUpdate);            
             return Redirect("~/AccountDetail/Index");    
         }
 
@@ -173,7 +177,7 @@ namespace MvcDemand.Controllers
                                 DataList.Add(deList[0].oAccNotation); DataList.Add("");
                                 DataList.Add(deList[0].oAccDateS); DataList.Add(deList[0].oAccDateE);
                                 DataList.Add(deList[0].oAccStatus); DataList.Add(deList[0].oAccNotationS);
-                                fExecuteValue = adModel.DataUpdate(DataList);
+                                fExecuteValue = dbClass.msExecuteDataBase("U", "AccountDetail", 2, aryDeclareName, DataList);
                             } else { 
                                 DataList.Add(adModel.getNewAccIndex().ToString());
                                 DataList.Add(drtemp["AccNo"]); DataList.Add(drtemp["AccName"]);
@@ -183,7 +187,7 @@ namespace MvcDemand.Controllers
                                 DataList.Add(drtemp["AccMobile"]); DataList.Add("");
                                 DataList.Add(""); DataList.Add(dbClass.ReturnDetailToNowDateTime("SD"));
                                 DataList.Add(""); DataList.Add("O"); DataList.Add("");
-                                fExecuteValue = adModel.DataCreate(DataList);
+                                fExecuteValue = dbClass.msExecuteDataBase("N", "AccountDetail", 0, aryDeclareName, DataList);
                             }
                         }
                     }                    
@@ -235,6 +239,7 @@ namespace MvcDemand.Controllers
             NpoiWB = null; MS.Close(); MS.Dispose(); Response.Flush(); Response.End();
 
         }
+
 
     }
 }

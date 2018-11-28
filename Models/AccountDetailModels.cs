@@ -112,53 +112,25 @@ namespace MvcDemand.Models
             if (funDataTable.Rows.Count > 0) { funReturnValue = funDataTable.Rows[0]["MaxIndex"].ToString(); }
             return funReturnValue;
         }
-
-        public string DataCreate(List<object> listDataCreate)
+        
+        public DataTable returnAccountDataTable()
         {
-            funExecuteValue = ""; funExecuteSQL = ""; funDicParas = null;
-            try {
-                funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataCreate);
-                funExecuteSQL = "Insert Into AccountDetail Values ( ";
-                for (int i = 0; i < aryDeclareName.Count; i++) { funExecuteSQL += string.Format(@"{0}{1}", aryDeclareName[i], (i < aryDeclareName.Count - 1) ? "," : ""); }
-                funExecuteSQL += " ) ";
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
-            } catch (Exception ex) {
-                funExecuteValue = ex.Message;
+            funDataTable = null; funQuerySQL = ""; funDicParas = null;
+            try
+            {
+                funQuerySQL = " Select a.AccIndex, a.AccNo, a.AccName, a.AccClass, a.AccDeptNo, a.AccJobNo, sa.SystemTitle as TitleAccClass"
+                            + " ,sb.SystemTitle as TitleAccDeptNo, sc.SystemTitle as TitleccJobNo From AccountDetail a "
+                            + " Inner Join SystemDataDetail sa on sa.SystemClass='AccClass' and sa.SystemValue=a.AccClass "
+                            + " Inner Join SystemDataDetail sb on sb.SystemClass='AccDeptNo' and sb.SystemValue=a.AccDeptNo "
+                            + " Inner Join SystemDataDetail sc on sc.SystemClass='AccJobNo' and sc.SystemValue=a.AccJobNo "
+                            + " Where a.AccStatus='O' ";
+                funDataTable = dbClass.msDataTableToDataBase(funQuerySQL, funDicParas);
             }
-            return funExecuteValue;
-        }
-
-        public string DataUpdate(List<object> listDataUpdate)
-        {
-            funExecuteSQL = ""; funExecuteValue = ""; funDicParas = null;
-            try {
-                funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataUpdate);
-                funExecuteSQL = "Update AccountDetail Set ";
-                for (int i = 2; i < aryColumnName.Count; i++) {
-                    funExecuteSQL += string.Format(@" {0}={1}{2} ", aryColumnName[i], aryDeclareName[i], (i < aryColumnName.Count - 1) ? "," : "");
-                }
-                funExecuteSQL += " Where ";
-                for (int i = 0; i < 2; i++) {
-                    funExecuteSQL += string.Format(@" {0}={1}{2}", aryColumnName[i], aryDeclareName[i], (i < 1) ? " and " : "");
-                }
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
-            } catch (Exception ex) {
-                funExecuteValue = ex.Message;
+            catch (Exception ex)
+            {
+                funDataTable.Clear();
             }
-            return funExecuteValue;
-        }
-
-        public string DataDelete(List<object> listDataDelete) {
-            funExecuteValue = ""; funExecuteSQL = ""; funDicParas = null; List<string> aryDeclareValue = new List<string>();
-            try {
-                aryDeclareValue = new List<string>() { "@AccIndex", "@AccNo" };
-                funDicParas = dbClass.GetListToNewDictionary(aryDeclareValue, listDataDelete);
-                funExecuteSQL = @"Delete from AccountDetail Where AccIndex=@AccIndex and AccNo=@AccNo ";
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
-            } catch (Exception ex) {
-                funExecuteValue = ex.Message;
-            }
-            return funExecuteValue;
+            return funDataTable;
         }
 
     }

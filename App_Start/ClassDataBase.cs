@@ -140,9 +140,12 @@ namespace MvcDemand
 
         public string ReturnToRandomValue(string funStrValue, int RanLen)
         {
-            string rtnValue = "";
-
-
+            string rtnValue = ""; string ranValue = "";
+            Random ran = new Random();
+            for (int i = 0; i < RanLen; i++) {
+                ranValue += ran.Next(0, 9).ToString(); 
+            }
+            rtnValue = string.Format(@"{0}{1}", funStrValue, ranValue);
             return rtnValue;
         }
 
@@ -161,7 +164,7 @@ namespace MvcDemand
                 case "U":
                         funExecuteSQL = string.Format(@" Update {0} Set ", execTableName);
                         for (int i = chkLen; i < aryDeclareName.Count; i++) {
-                            funExecuteSQL += string.Format(@" {0}={1} {2}", aryDeclareName[i].Replace('@', ' '), aryDeclareName[i], (i < aryDeclareName.Count() - 1) ? " and " : "");
+                            funExecuteSQL += string.Format(@" {0}={1} {2}", aryDeclareName[i].Replace('@', ' '), aryDeclareName[i], (i < aryDeclareName.Count() - 1) ? "," : "");
                         }
                         funExecuteSQL += string.Format(@" where ");
                         for (int i = 0; i < chkLen; i++) {

@@ -164,7 +164,7 @@
         SendDataUpdate = function (vClass, vValue, vTitle, vNotation, vRemark, vStatus) {
             $('#hideSystemClass').val(vClass); $('#textSystemClassU').val(vClass); $('#textSystemClassU').attr("disabled", true);
             $('#hideSystemValue').val(vValue); $('#textSystemValueU').val(vValue); $('#textSystemValueU').attr("disabled", true);
-            $('#hideSystemTitle').val(vTitle); $('#textSystemTitleU').val(vTitle); $('#etxtSystemTitle').focus();
+            $('#hideSystemTitle').val(vTitle); $('#textSystemTitleU').val(vTitle); $('#textSystemTitleU').focus();
             $('#hideSystemNotation').val(vNotation); $('#textSystemNotationU').val(vNotation);
             $('#hideSystemRemark').val(vRemark); $('#textSystemRemarkU').val(vRemark);
             $('#hideSystemStatus').val(vStatus); if (vStatus == "O") { $('#checkSystemStatusU').attr("checked", true); } else { $('#checkSystemStatusU').attr("checked", false); }
@@ -175,8 +175,8 @@
                 $('#showMess').notify("系統參數標題不得空白!!"); $('#textSystemTitleU').focus(); return false;
             } else { $('#hideSystemTitle').val($('#textSystemTitleU').val()); }
             if ($('#checkSystemStatusU').prop('checked') == true) { $('#hideSystemStatus').val('O'); } else { $('#hideSystemStatus').val('X'); }
-            if ($('#textSystemNotationU').val() != "") { $('#hideSystemNotation').val($('#textSystemNotationU').val()); }
-            if ($('#textSystemRemarkU').val() != "") { $('#hideSystemRemark').val($('#textSystemRemarkU').val()); }
+            if ($('#textSystemNotationU').val() != "") { $('#hideSystemNotation').val($('#textSystemNotationU').val()); } else { $('#hideSystemNotation').val(""); }
+            if ($('#textSystemRemarkU').val() != "") { $('#hideSystemRemark').val($('#textSystemRemarkU').val()); } else { $('#hideSystemRemark').val(""); }
             $('#form1').attr('action', 'Update');
             $('#form1').submit();
         }
@@ -214,12 +214,13 @@
                     <input type="button" id="btnCleanC" value="取消新增" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showCreate').hide();" />
                 </td>
             </tr>
+            <tr><td colspan="4"><br /></td></tr>
         </table>
     </div>
     
     <div id="showUpdate" class="modelU" style="display:none; text-align:center">
         <table class="modalU_body" style="width:700px; text-align:center" border="1" cellpadding="0" cellspacing="0">
-            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增系統參數基本資料</td></tr>
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">修改系統參數基本資料</td></tr>
             <tr style="height:30px">
                 <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">系統類別</td>
                 <td style="width:250px; text-align:left">@Html.TextBox("textSystemClassU", "", new { Style = "width:90%; height:30px" })</td>
@@ -247,6 +248,7 @@
                     <input type="button" id="btnCleanU" value="取消修改" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showUpdate').hide();" />
                 </td>
             </tr>
+            <tr><td colspan="4"><br /></td></tr>
         </table>
     </div>
 }

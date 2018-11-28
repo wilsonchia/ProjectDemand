@@ -16,6 +16,8 @@ namespace MvcDemand.Controllers
     {
         SystemDataDetailModels sddModel = new SystemDataDetailModels();
         ClassDataBase dbClass = new ClassDataBase();
+        public List<string> aryColumnName = new List<string>() { "SystemClass", "SystemValue", "SystemTitle", "SystemNotation", "SystemRemark", "SystemStatus" };
+        public List<string> aryDeclareName = new List<string>() { "@SystemClass", "@SystemValue", "@SystemTitle", "@SystemNotation", "@SystemRemark", "@SystemStatus" };
 
         public ActionResult Index(SystemDataDetailModels viewModel)
         {
@@ -66,7 +68,7 @@ namespace MvcDemand.Controllers
                 form["hideSystemTitle"].ToString(), form["hideSystemNotation"].ToString(),
                 form["hideSystemRemark"].ToString(), form["hideSystemStatus"].ToString()
             };
-            String funExecuteValue = sddModel.DataCreate(aryDataCreate);
+            String funExecuteValue = dbClass.msExecuteDataBase("N", "SystemDataDetail", 0 , aryDeclareName, aryDataCreate);                
             return Redirect("~/SystemDataDetail/Index");
         }
 
@@ -79,13 +81,15 @@ namespace MvcDemand.Controllers
                 form["hideSystemTitle"].ToString(), form["hideSystemNotation"].ToString(),
                 form["hideSystemRemark"].ToString(), form["hideSystemStatus"].ToString()
             };
-            string funExecuteValue = sddModel.DataUpdate(aryDataUpdate);
+            string funExecuteValue = dbClass.msExecuteDataBase("U", "SystemDataDetail", 2, aryDeclareName, aryDataUpdate);
             return Redirect("~/SystemDataDetail/Index");
         }
 
         public RedirectResult Delete(string vClass, string vValue)
         {
-            string funExecuteValue = sddModel.DataDelete(Request["vClass"], Request["vValue"]);
+            List<string> delaryDeclareName = new List<string>() { "@SystemClass", "@SystemValue" };
+            List<object> aryDataDelete = new List<object>() { vClass, vValue };
+            string funExecuteValue = dbClass.msExecuteDataBase("D", "SystemDataDetail", 0, delaryDeclareName, aryDataDelete);
             return Redirect("~/SystemDataDetail/Index");
         }
 
@@ -183,11 +187,11 @@ namespace MvcDemand.Controllers
                             valSystemValue = drtemp["SystemValue"].ToString();
                             if (SystemDetailList.Where(x => x.oSystemClass == valSystemClass && x.oSystemValue == valSystemValue).Count() > 0)
                             {
-                                sddModel.DataUpdate(DataList);
+                                dbClass.msExecuteDataBase("N", "SystemDataDetail", 0, aryDeclareName, DataList);                                
                             }
                             else
                             {
-                                sddModel.DataUpdate(DataList);
+                                dbClass.msExecuteDataBase("U", "SystemDataDetail", 2, aryDeclareName, DataList);                                
                             }
                         }
                     }

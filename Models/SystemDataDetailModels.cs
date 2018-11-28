@@ -94,56 +94,6 @@ namespace MvcDemand.Models
             return rtnSelList;
         }
 
-        public string DataCreate(List<object> listDataCreate) {
-            funExecuteValue = ""; funExecuteSQL = ""; funDicParas = null;
-            try {
-                funExecuteSQL = "Insert into SystemDataDetail ( ";
-                for (int i = 0; i < aryColumnName.Count; i++) {
-                    funExecuteSQL += string.Format(@"{0}{1}", aryColumnName[i].ToString(), (i < aryColumnName.Count - 1) ? "," : "");
-                }
-                funExecuteSQL += " ) Values ( ";
-                for (int j = 0; j < aryDeclareName.Count; j++) {
-                    funExecuteSQL += string.Format(@"{0}{1}", aryDeclareName[j].ToString(), (j < aryDeclareName.Count - 1) ? "," : "");
-                }
-                funExecuteSQL += " ) ";
-                funDicParas = null; funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataCreate);
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
-            } catch (Exception ex) {
-                funExecuteValue = ex.Message;
-            }
-            return funExecuteValue;
-        }
-
-        public string DataUpdate(List<object> listDataUpdate) {
-            funExecuteSQL = ""; funExecuteValue = ""; funDicParas = null;
-            try {
-                funExecuteSQL = "Update SystemDataDetail Set ";
-                for (int i = 2; i < aryColumnName.Count; i++) {
-                    funExecuteSQL += string.Format(@" {0}={1}{2}", aryColumnName[i], aryDeclareName[i], (i < aryColumnName.Count - 1) ? "," : "");
-                }
-                funExecuteSQL += " Where ";
-                for (int j = 0; j < 2; j++) {
-                    funExecuteSQL += string.Format(@" {0}={1}{2}", aryColumnName[j], aryDeclareName[j], (j < 1) ? " and " : "");
-			    }
-                funDicParas = dbClass.GetListToNewDictionary(aryDeclareName, listDataUpdate);
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);                
-            } catch (Exception ex) {
-                funExecuteValue = ex.Message;
-            }
-            return funExecuteValue;
-        }
-
-        public string DataDelete(string fSystemClass, string fSystemValue) {
-            funExecuteValue = ""; funExecuteSQL = ""; funDicParas = null;
-            try {
-                funExecuteSQL = string.Format(@" Delete from SystemDataDetail Where SystemClass='{0}' and SystemValue='{1}' ", fSystemClass, fSystemValue);
-                funExecuteValue = dbClass.msExecuteValueToDataBase(funExecuteSQL, funDicParas);
-            } catch (Exception ex) {
-                funExecuteValue = ex.Message;
-            }
-            return funExecuteValue;
-        }
-
     }
 
     public class oSystemDataDetail {

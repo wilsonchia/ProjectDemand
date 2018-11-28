@@ -11,14 +11,17 @@ namespace MvcDemand.Models
     public class AccountRelationModels
     {
         ClassDataBase dbClass = new ClassDataBase();
-        SystemDataDetailModels addModel = new SystemDataDetailModels();
+        SystemDataDetailModels sddModel = new SystemDataDetailModels();
         AccountDetailModels adModel = new AccountDetailModels();
         List<oAccountRelation> viewAccountRelation = new List<oAccountRelation>();
         List<oAccountRelation> detailAccountRelation = new List<oAccountRelation>();
         List<SelectListItem> selRelationClass = new List<SelectListItem>();
+        List<SelectListItem> selRelationAccIndex = new List<SelectListItem>();
         public string valAccIndex { get; set; }
         public string valAccNo { get; set; }
         public string valAccName { get; set; }
+        public string valAccDeptNo { get; set; }
+        public string valTitleAccDeptNo { get; set; }
         public string valRelationClass { get; set; }
         public string valTitleRelClass { get; set; }
         public string valRelAccIndex { get; set; }
@@ -37,6 +40,10 @@ namespace MvcDemand.Models
         public DataTable funDataTable { get; set; }
         public Dictionary<string, object> funDicParas = new Dictionary<string, object>();
 
+        
+
+
+
 
     }
 
@@ -44,6 +51,8 @@ namespace MvcDemand.Models
         public string oAccIndex { get; set; }
         public string oAccNo { get; set; }
         public string oAccName { get; set; }
+        public string oAccDeptNo { get; set; }
+        public string oTitleAccDeptNo { get; set; }
         public string oRelationClass { get; set; }
         public string oTitleRelClass { get; set; }
         public string oRelAccIndex { get; set; }
