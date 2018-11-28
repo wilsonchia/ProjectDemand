@@ -15,7 +15,8 @@ namespace MvcDemand.Models
         AccountDetailModels adModel = new AccountDetailModels();
         List<oAccountRelation> viewAccountRelation = new List<oAccountRelation>();
         List<oAccountRelation> detailAccountRelation = new List<oAccountRelation>();
-        List<SelectListItem> selRelationClass = new List<SelectListItem>();
+        List<SelectListItem> selAccIndex = new List<SelectListItem>();
+        List<SelectListItem> selAccDeptNo = new List<SelectListItem>();        
         List<SelectListItem> selRelationAccIndex = new List<SelectListItem>();
         public string valAccIndex { get; set; }
         public string valAccNo { get; set; }

@@ -123,33 +123,37 @@
             <tr><td style="width:100%" colspan="4"><hr /></td></tr>
         </table>
     </div>
-    @Html.Hidden("hideAccIndex")
-    @Html.Hidden("hideRelationClass")
-    @Html.Hidden("hideRelationAccIndex")
+        
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
-        <table class="modal_body" style="width:700px;" border="0" cellpadding="0" cellspacing="0">
-            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增使用帳號關聯資料</td></tr>
-            <tr style="height:30px">
-                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">員工帳號</td>
-                <td style="width:250px; text-align:left">@Html.TextBox("textSystemClass", "", new { Style = "width:90%; height:30px" })</td>
-                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">主管類別</td>
-                <td style="width:250px; text-align:left">@Html.TextBox("textSystemValue", "", new { Style = "width:90%; height:30px" })</td>
+        <table class="modal_body" style="width:1000px;" border="0" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="8">新增帳號關聯資料</td></tr>
+            <tr style="height:30px; font-weight:bold; font-size:18px">
+                <td style="width:125px; text-align:left">帳號清單</td>
+                <td style="width:125px; text-align:left"></td>
+                <td style="width:125px; text-align:left">單位清單</td>
+                <td style="width:250px; text-align:left" colspan="2"></td>
+                <td style="width:375px" colspan="3"></td>
             </tr>
-            <tr style="height:30px">
-                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">關聯清單</td>
-                <td style="width:900px; text-align:left" colspan="3">
-
-
-                </td>
+            <tr><td colspan="8"><hr /></td></tr>
+            <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
+                <td style="width:125px; text-align:center">一般帳號</td><td style="width:125px; text-align:center">上級主管</td>
+                <td style="width:125px; text-align:center">二級主管</td><td style="width:125px; text-align:center">負責窗口</td>
+                <td style="width:125px; text-align:center">代理人</td><td style="width:125px; text-align:center">專案經理</td>
+                <td style="width:125px; text-align:center">系統分析師</td><td style="width:125px; text-align:center">開發工程師</td>
             </tr>
-            <tr><td colspan="4"><span id="showMess"></span></td></tr>
-            <tr style="height:30px">
-                <td style="width:100%; text-align:center" colspan="4">
-                    <input type="button" id="btnFormC" value="確認新增" style="width:200px; height:30px;font-weight:bold; font-size:18px" onclick="return FormDataCreate();" />
-                    <input type="button" id="btnCleanC" value="取消新增" style="width:200px; height:30px; font-weight:bold; font-size:18px" onclick="$('#showDataCreate').hide();" />
-                </td>
-            </tr>
-            <tr><td colspan="4"><br /></td></tr>
+            <tr><td colspan="8"><hr /></td></tr>
+            <tr style="height:35px; font-size:14px; font-weight:bold;">
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+                <td style="width:125px; text-align:center"></td>
+            </tr>            
+            <tr><td colspan="8"><span id="showMess"></span></td></tr>            
+            <tr><td colspan="8"><br /></td></tr>
         </table>
     </div>
 }
