@@ -41,10 +41,39 @@ namespace MvcDemand.Models
         public DataTable funDataTable { get; set; }
         public Dictionary<string, object> funDicParas = new Dictionary<string, object>();
 
+        public DataTable returnDataTable() {
+            funDataTable.Clear(); funQuerySQL = ""; funDicParas = null;
+            try { 
+                funQuerySQL = "Select a.*, sa.SystemTitle as TitleAccDeptNo, sb.SytstemTitle as TitleRelationClass"
+                            + ",aa.AccNo, aa.AccName, IsNull(ab.AccNo,'') as RelationAccNo, Isnull(ab.AccName,'') as RelationAccName "
+                            + " From AccountRelation a Inner Join SystemDataDetail sa on sa.SystemClass='AccDeptNo' and sa.SystemValue=a.AccDeptNo "
+                            + " Inner Join SystemDataDetail sb on sb.SystemClass='RelationClass' and sb.SystemValue=aRelationClass "
+                            + " Inner Join AccountDetail aa on aa.AccIndex=a.AccIndex Left Join AccountDetail ab on ab.AccIndex=a.RelationIndex ";
+                funDataTable = dbClass.msDataTableToDataBase(funQuerySQL, funDicParas);
+            } catch (Exception ex) {
+                funDataTable.Clear();
+            }
+            return funDataTable;
+        }
+
+        public List<oAccountRelation> listAccountRelation()
+        {
+            List<oAccountRelation> list = new List<oAccountRelation>();
+            try {
+                DataTable dt = new DataTable(); dt = returnDataTable();
+                list = (from a in dt.AsEnumerable() select new oAccountRelation {
+                            oAccIndex = a.Field<string>("AccIndex"), oAccNo = a.Field<string>("AccNo"),
+                            oAccName = a.Field<string>("AccName"), oAccDeptNo = a.Field<string>("AccDeptNo"),
+                            oTitleAccDeptNo = a.Field<string>("TitleAccDeptNo"), oRelationClass = a.Field<string>("RelationClass"),
+                            oTitleRelClass = a.Field<string>("TitleRelationClass"), oRelAccIndex = a.Field<string>("RelationAccIndex"),
+                            oRelAccNo = a.Field<string>("RelationAccNo"), oRelAccName = a.Field<string>("RelationAccName")
+                        }).ToList();
+            } catch (Exception ex) {
+                list.Clear();
+            }
+            return list;
+        }
         
-
-
-
 
     }
 
