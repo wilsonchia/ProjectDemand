@@ -17,7 +17,7 @@ namespace MvcDemand.Models
         public List<oAccountDetail> detailAccountDetail = new List<oAccountDetail>();
         public List<SelectListItem> selAccDeptNo = new List<SelectListItem>();
         public List<SelectListItem> selAccJobNo = new List<SelectListItem>();
-        public List<SelectListItem> selAccClass = new List<SelectListItem>();
+        public List<SelectListItem> selAccClass = new List<SelectListItem>();       
         public string valAccIndex { get; set; }
         public string valAccNo { get; set; }
         public string valAccName { get; set; }

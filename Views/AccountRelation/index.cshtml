@@ -9,7 +9,7 @@
         text-align: center;
         position: fixed;
         z-index: 1;
-        top: 5%;
+        top: 1%;
         left: 0;
         width: 100%;
         height: 100%;
@@ -24,7 +24,7 @@
         /*background-color: white;*/
         /*width:90%;*/
         /*width: 870px;*/
-        top: 10%;
+        top: 1%;
         left: 0;
         right: 0;
         margin-left: auto;
@@ -121,37 +121,205 @@
                 </td>
             </tr>
             <tr><td style="width:100%" colspan="4"><hr /></td></tr>
+            <tr><td style="width:100%" colspan="4">@{Html.RenderPartial("list", Model);}</td></tr>
         </table>
     </div>
         
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
+        @Html.Hidden("hideAccountData", Model.aryAccountDetail)
         <table class="modal_body" style="width:1000px;" border="0" cellpadding="0" cellspacing="0">
             <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="8">新增帳號關聯資料</td></tr>
             <tr style="height:30px; font-weight:bold; font-size:18px">
-                <td style="width:125px; text-align:left">帳號清單</td>
-                <td style="width:125px; text-align:left"></td>
-                <td style="width:125px; text-align:left">單位清單</td>
+                <td style="width:250px; text-align:left" colspan="2">帳號清單</td>
                 <td style="width:250px; text-align:left" colspan="2"></td>
-                <td style="width:375px" colspan="3"></td>
+                <td style="width:250px; text-align:left" colspan="2">單位清單</td>
+                <td style="width:250px; text-align:left" colspan="2"></td>
             </tr>
             <tr><td colspan="8"><hr /></td></tr>
             <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
-                <td style="width:125px; text-align:center">一般帳號</td><td style="width:125px; text-align:center">上級主管</td>
-                <td style="width:125px; text-align:center">二級主管</td><td style="width:125px; text-align:center">負責窗口</td>
-                <td style="width:125px; text-align:center">代理人</td><td style="width:125px; text-align:center">專案經理</td>
-                <td style="width:125px; text-align:center">系統分析師</td><td style="width:125px; text-align:center">開發工程師</td>
+                <td style="width:250px; text-align:center">一般帳號</td>
+                <td style="width:250px; text-align:center">上級主管</td>
+                <td style="width:250px; text-align:center">二級主管</td>
+                <td style="width:250px; text-align:center">負責窗口</td>
+                <td style="width:250px; text-align:center">代理人</td>
+                <td style="width:250px; text-align:center">專案經理</td>
+                <td style="width:250px; text-align:center">系統分析師</td>
+                <td style="width:250px; text-align:center">開發工程師</td>
             </tr>
             <tr><td colspan="8"><hr /></td></tr>
-            <tr style="height:35px; font-size:14px; font-weight:bold;">
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-                <td style="width:125px; text-align:center"></td>
-            </tr>            
+            <tr style="height:35px; font-size:12px;">
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationA.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationA[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationA[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationB.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationB[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationB[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationC.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationC[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationC[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationD.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationD[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationD[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>  
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationE.Count; i++)
+                      {
+
+                        @:(
+                        @Model.listAccountRelationE[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationE[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationF.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationF[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationF[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationG.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationG[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationG[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>
+                <td style="width:125px; text-align:left">
+                    @{  for (int i = 0; i < Model.listAccountRelationH.Count; i++)
+                      {
+                        @:(
+                        @Model.listAccountRelationH[i].oAccNo.ToString();
+                        @:)<br />
+                        @Model.listAccountRelationH[i].oAccName.ToString();
+                        @:<br />
+                        }
+
+                    }
+                </td>                              
+            </tr>
+            <tr><td colspan="8"><hr /></td></tr>
+            <tr><td colspan="8">
+                <table style="width:100%" border="0">
+                    @{  for (int i = 0; i < Model.listAccountDetail.Count; i+=5)
+                        {
+                            @:<tr style="height:35px; font-size:12px; color:blue; vertical-align:top">
+                            if (i <= Model.listAccountDetail.Count - 1)
+                            {
+                                @:<td style="width:200px; text-align:left">
+                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i].oAccIndex.ToString()" />
+                                @:(
+                                @Model.listAccountDetail[i].oAccNo.ToString();
+                                @:)
+                                @Model.listAccountDetail[i].oAccName.ToString();
+                                @:</td>
+                            }
+                            if (i + 1 <= Model.listAccountDetail.Count - 1)
+                            {
+                                @:<td style="width:200px; text-align:left">
+                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 1].oAccIndex.ToString()" />
+                                @:(
+                                @Model.listAccountDetail[i + 1].oAccNo.ToString();
+                                @:)
+                                @Model.listAccountDetail[i + 1].oAccName.ToString();
+                                @:</td>
+                            }
+                            if (i + 2 <= Model.listAccountDetail.Count - 1)
+                            {
+                                @:<td style="width:200px; text-align:left">
+                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 2].oAccIndex.ToString()" />
+                                @:(
+                                @Model.listAccountDetail[i + 2].oAccNo.ToString();
+                                @:)
+                                @Model.listAccountDetail[i + 2].oAccName.ToString();
+                                @:</td>
+                            }
+                            if (i + 3 <= Model.listAccountDetail.Count - 1)
+                            {
+                                @:<td style="width:200px; text-align:left">
+                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 3].oAccIndex.ToString()" />
+                                @:(
+                                @Model.listAccountDetail[i + 3].oAccNo.ToString();
+                                @:)
+                                @Model.listAccountDetail[i + 3].oAccName.ToString();
+                                @:</td>
+                            }
+                            if (i + 4 <= Model.listAccountDetail.Count - 1)
+                            {
+                                @:<td style="width:200px; text-align:left">
+                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 4].oAccIndex.ToString()" />
+                                @:(
+                                @Model.listAccountDetail[i + 4].oAccNo.ToString();
+                                @:)
+                                @Model.listAccountDetail[i + 4].oAccName.ToString();
+                                @:</td>
+                            }
+                            @:</tr>
+                        }
+                    }
+
+                </table>    
+            </td></tr>
+            
+            <tr><td colspan="8"><hr /></td></tr>
+            <tr style="height:35px; font-size:12px; color:blue; vertical-align:top">
+                <td style="width:125px; text-align:center"><input type="button" value="一般帳號" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="上級主管" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="二級主管" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="負責窗口" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="代理人" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="專案經理" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="系統分析師" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="開發工程師" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+            </tr>
             <tr><td colspan="8"><span id="showMess"></span></td></tr>            
             <tr><td colspan="8"><br /></td></tr>
         </table>

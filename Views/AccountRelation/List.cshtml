@@ -1,1 +1,118 @@
-﻿
+﻿<table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+    <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
+        <td style="width:250px; text-align:center">一般帳號</td>
+        <td style="width:250px; text-align:center">上級主管</td>
+        <td style="width:250px; text-align:center">二級主管</td>
+        <td style="width:250px; text-align:center">負責窗口</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px; font-size:13px;">
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationA.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationA[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationA[i].oAccName.ToString();                
+                @Model.listAccountRelationA[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationB.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationB[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationB[i].oAccName.ToString();
+                @Model.listAccountRelationB[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationC.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationC[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationC[i].oAccName.ToString();
+                @Model.listAccountRelationC[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationD.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationD[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationD[i].oAccName.ToString();
+                @Model.listAccountRelationD[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>        
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
+        <td style="width:250px; text-align:center">代理人</td>
+        <td style="width:250px; text-align:center">專案經理</td>
+        <td style="width:250px; text-align:center">系統分析師</td>
+        <td style="width:250px; text-align:center">開發工程師</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px; font-size:13px;">        
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationE.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationE[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationE[i].oAccName.ToString();
+                @Model.listAccountRelationE[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationF.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationF[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationF[i].oAccName.ToString();
+                @Model.listAccountRelationF[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationG.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationG[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationG[i].oAccName.ToString();
+                @Model.listAccountRelationG[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+        <td style="width:250px; text-align:left">
+            @{for (int i = 0; i < Model.listAccountRelationH.Count; i++)
+            {
+                @:(
+                @Model.listAccountRelationH[i].oAccNo.ToString();
+                @:)
+                @Model.listAccountRelationH[i].oAccName.ToString();
+                @Model.listAccountRelationH[i].oTitleAccDeptNo.ToString();
+                @:<br />
+              }
+            }
+        </td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+</table>
