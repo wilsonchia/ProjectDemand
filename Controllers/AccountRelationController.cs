@@ -10,7 +10,7 @@ namespace MvcDemand.Controllers
 {
     public class AccountRelationController : Controller
     {
-
+        ClassDataBase dbClass = new ClassDataBase();
         SystemDataDetailModels addModel = new SystemDataDetailModels();
         AccountDetailModels adModel = new AccountDetailModels();
         AccountRelationModels arModel = new AccountRelationModels();
@@ -29,10 +29,15 @@ namespace MvcDemand.Controllers
             viewModel.listAccountRelationG = viewModel.viewAccountRelation.Where(x => x.oRelationClass == "G").ToList();
             viewModel.listAccountRelationH = viewModel.viewAccountRelation.Where(x => x.oRelationClass == "H").ToList();
             viewModel.listAccountDetail = adModel.listObjAccountDetail();
-            string valAccountData = "";
-            foreach (oAccountDetail item in viewModel.listAccountDetail) { valAccountData += item.oAccIndex.ToString() + "_";  }
+            string valAccountData = ""; string valAccountDeptData = "";
+            foreach (oAccountDetail item in viewModel.listAccountDetail) { 
+                valAccountData += item.oAccIndex.ToString() + "_";
+                valAccountDeptData += item.oAccIndex.ToString() + "$" + item.oAccDeptNo.ToString() + "_";
+            }
             valAccountData = (valAccountData != "") ? valAccountData.Substring(0, valAccountData.Length - 1) : valAccountData;
             viewModel.aryAccountDetail = valAccountData;
+            valAccountDeptData = (valAccountDeptData != "") ? valAccountDeptData.Substring(0, valAccountDeptData.Length - 1) : valAccountDeptData;
+            viewModel.aryAccountDeptData = valAccountDeptData;
             return View(viewModel);
         }
 
@@ -52,6 +57,19 @@ namespace MvcDemand.Controllers
              */ 
             return PartialView("list", viewModel);
         }
+
+        public string AccountRelationDataCreate(string fRelatClass, string fAccIndex, string fAccDeptNo)
+        {
+            string fReturnValue = ""; string fExecuteValue = "";
+            List<object> delDeclareValue = new List<object>() { fAccIndex, fAccDeptNo, fRelatClass };
+            List<string> delDeclareName = new List<string>() { "@AccIndex", "@AccDeptNo", "@RelationClass" };
+            fExecuteValue = dbClass.msExecuteDataBase("D", "AccountRelation", 0, delDeclareName, delDeclareValue);
+            List<object> insDeclareValue = new List<object>() { fAccIndex, fAccDeptNo, fRelatClass, "" };
+            fExecuteValue = dbClass.msExecuteDataBase("N", "AccountRelation", 0, aryDeclareName, insDeclareValue);
+            fReturnValue = "O";
+            return fReturnValue;
+        }
+
 
 
     }

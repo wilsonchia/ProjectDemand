@@ -48,6 +48,7 @@ namespace MvcDemand.Models
         public string valShowDetail { get; set; }
         public string valDetailCount { get; set; }
         public string aryAccountDetail { get; set; }
+        public string aryAccountDeptData { get; set; }
         public DataTable funDataTable { get; set; }
         public Dictionary<string, object> funDicParas = new Dictionary<string, object>();
 
@@ -83,8 +84,8 @@ namespace MvcDemand.Models
             }
             return list;
         }
-        
 
+        
     }
 
     public class oAccountRelation {

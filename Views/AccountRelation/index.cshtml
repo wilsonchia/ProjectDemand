@@ -15,6 +15,7 @@
         height: 100%;
         font-size: 100%;
         background-color: rgba(0,0,0,0.6) !important;
+        overflow-y:scroll;
     }
 
     .modal_body {
@@ -31,6 +32,7 @@
         margin-right: auto;
         border-style: solid;
         border-color: #2E6E9E;
+        overflow-y:scroll;
     }
 
     .modalU {
@@ -127,13 +129,58 @@
         
     <div id="showDataCreate" class="modal" style="display:none;text-align:center">
         @Html.Hidden("hideAccountData", Model.aryAccountDetail)
+        @Html.Hidden("hideAccountDeptData", Model.aryAccountDeptData)
+        <script type="text/javascript">
+
+            CheckBoxSelAll = function (idC) {
+                var valSumAccountData = $('#hideAccountData').val();
+                var aryAccountData = valSumAccountData.split('_');                
+                for (var i = 0; i < aryAccountData[i]; i++) {
+                    if (idC.checked) {
+                        $('#chk_' + aryAccountData[i]).prop('checked', true);
+                    } else {
+                        $('#chk_' + aryAccountData[i]).prop('checked', false);
+                    }                    
+                }                
+                return false;
+            }
+            
+            FormDataCreate = function (funDeptNo) {
+                var FormURL = baseURL + "AccountRelation/AccountRelationDataCreate";
+                var rtnValue = "";
+                var aryAccountDeptData = $('#hideAccountDeptData').val().split('_');
+                alert(aryAccountDeptData.length);
+                for (var i = 0; i < aryAccountDeptData.length; i++) {
+                    var vIndex = aryAccountDeptData[i].split('$')[0];
+                    var vDeptNo = aryAccountDeptData[i].split('$')[1];                   
+                    if ($('#check_' + vIndex).prop("checked")) {
+                        var objData = { fRelatClass: funDeptNo, fAccIndex: aryAccountDeptData[i].split('$')[0], fAccDeptNo: aryAccountDeptData[i].split('$')[1] };
+                        $.ajax({
+                            url: FormURL,
+                            type: 'Post',
+                            data: objData,
+                            async: false,
+                            success: function (data) {
+                                rtnValue = data;
+                            },
+                            error: function (error, ajaxOption, thrownError) {
+                                rtnValue = error.responseText;
+                            }
+                        });
+                    }
+                }                
+                return false;
+            }
+
+
+        </script>
         <table class="modal_body" style="width:1000px;" border="0" cellpadding="0" cellspacing="0">
             <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="8">新增帳號關聯資料</td></tr>
             <tr style="height:30px; font-weight:bold; font-size:18px">
                 <td style="width:250px; text-align:left" colspan="2">帳號清單</td>
                 <td style="width:250px; text-align:left" colspan="2"></td>
                 <td style="width:250px; text-align:left" colspan="2">單位清單</td>
-                <td style="width:250px; text-align:left" colspan="2"></td>
+                <td style="width:250px; text-align:right" colspan="2"><input type="button" value="取消帳號關聯" width="200" height="30"  /></td>
             </tr>
             <tr><td colspan="8"><hr /></td></tr>
             <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
@@ -246,7 +293,7 @@
                     }
                 </td>                              
             </tr>
-            <tr><td colspan="8"><hr /></td></tr>
+            <tr><td colspan="8" style="text-align:left; font-size:13px; color:blue"><hr /><input type="checkbox" id="checkAll" onclick="CheckBoxSelAll(this);" />全選</td></tr>
             <tr><td colspan="8">
                 <table style="width:100%" border="0">
                     @{  for (int i = 0; i < Model.listAccountDetail.Count; i+=5)
@@ -255,7 +302,7 @@
                             if (i <= Model.listAccountDetail.Count - 1)
                             {
                                 @:<td style="width:200px; text-align:left">
-                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i].oAccIndex.ToString()" />
+                                @:<input type="checkbox" id="check_@Model.listAccountDetail[i].oAccIndex.ToString()" />
                                 @:(
                                 @Model.listAccountDetail[i].oAccNo.ToString();
                                 @:)
@@ -265,7 +312,7 @@
                             if (i + 1 <= Model.listAccountDetail.Count - 1)
                             {
                                 @:<td style="width:200px; text-align:left">
-                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 1].oAccIndex.ToString()" />
+                                @:<input type="checkbox" id="check_@Model.listAccountDetail[i + 1].oAccIndex.ToString()" />
                                 @:(
                                 @Model.listAccountDetail[i + 1].oAccNo.ToString();
                                 @:)
@@ -275,7 +322,7 @@
                             if (i + 2 <= Model.listAccountDetail.Count - 1)
                             {
                                 @:<td style="width:200px; text-align:left">
-                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 2].oAccIndex.ToString()" />
+                                @:<input type="checkbox" id="check_@Model.listAccountDetail[i + 2].oAccIndex.ToString()" />
                                 @:(
                                 @Model.listAccountDetail[i + 2].oAccNo.ToString();
                                 @:)
@@ -285,7 +332,7 @@
                             if (i + 3 <= Model.listAccountDetail.Count - 1)
                             {
                                 @:<td style="width:200px; text-align:left">
-                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 3].oAccIndex.ToString()" />
+                                @:<input type="checkbox" id="check_@Model.listAccountDetail[i + 3].oAccIndex.ToString()" />
                                 @:(
                                 @Model.listAccountDetail[i + 3].oAccNo.ToString();
                                 @:)
@@ -295,7 +342,7 @@
                             if (i + 4 <= Model.listAccountDetail.Count - 1)
                             {
                                 @:<td style="width:200px; text-align:left">
-                                @:<input type="checkbox" id="chk_@Model.listAccountDetail[i + 4].oAccIndex.ToString()" />
+                                @:<input type="checkbox" id="check_@Model.listAccountDetail[i + 4].oAccIndex.ToString()" />
                                 @:(
                                 @Model.listAccountDetail[i + 4].oAccNo.ToString();
                                 @:)
@@ -311,14 +358,14 @@
             
             <tr><td colspan="8"><hr /></td></tr>
             <tr style="height:35px; font-size:12px; color:blue; vertical-align:top">
-                <td style="width:125px; text-align:center"><input type="button" value="一般帳號" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="上級主管" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="二級主管" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="負責窗口" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="代理人" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="專案經理" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="系統分析師" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
-                <td style="width:125px; text-align:center"><input type="button" value="開發工程師" style="width:120px; height:30px; font-weight:bold;font-size:14px" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="一般帳號" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('A');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="上級主管" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('B');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="二級主管" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('C');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="負責窗口" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('D');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="代理人" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('E');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="專案經理" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('F');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="系統分析師" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('G');" /></td>
+                <td style="width:125px; text-align:center"><input type="button" value="開發工程師" style="width:120px; height:30px; font-weight:bold;font-size:14px" onclick="FormDataCreate('H');" /></td>
             </tr>
             <tr><td colspan="8"><span id="showMess"></span></td></tr>            
             <tr><td colspan="8"><br /></td></tr>
