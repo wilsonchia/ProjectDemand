@@ -11,7 +11,7 @@ namespace MvcDemand.Controllers
     public class AccountRelationController : Controller
     {
         ClassDataBase dbClass = new ClassDataBase();
-        SystemDataDetailModels addModel = new SystemDataDetailModels();
+        SystemDataDetailModels sddModel = new SystemDataDetailModels();
         AccountDetailModels adModel = new AccountDetailModels();
         AccountRelationModels arModel = new AccountRelationModels();
         public List<string> aryDeclareName = new List<string>() { "@AccIndex", "@AccDeptNo", "@RelationClass", "@RelationAccIndex" };
@@ -38,38 +38,32 @@ namespace MvcDemand.Controllers
             viewModel.aryAccountDetail = valAccountData;
             valAccountDeptData = (valAccountDeptData != "") ? valAccountDeptData.Substring(0, valAccountDeptData.Length - 1) : valAccountDeptData;
             viewModel.aryAccountDeptData = valAccountDeptData;
+            viewModel.selAccDeptNo = sddModel.selObjSystemDataDetail("AccDeptNo", "請選擇單位", "");
             return View(viewModel);
-        }
-
-
-        public PartialViewResult GetBindData(string fSearchValue, AccountRelationModels viewModel) {
-            
-            /*
-            viewModel.listAccountRelationA = sdList.Where(x => x.oRelationClass.Equals("A")).ToList();
-            ViewBag.listAccountRelationA = viewModel.listAccountRelationA;
-            viewModel.listAccountRelationB = sdList.Where(x => x.oRelationClass == "B").ToList();
-            viewModel.listAccountRelationC = sdList.Where(x => x.oRelationClass == "C").ToList();
-            viewModel.listAccountRelationD = sdList.Where(x => x.oRelationClass == "D").ToList();
-            viewModel.listAccountRelationE = sdList.Where(x => x.oRelationClass == "E").ToList();
-            viewModel.listAccountRelationF = sdList.Where(x => x.oRelationClass == "F").ToList();
-            viewModel.listAccountRelationG = sdList.Where(x => x.oRelationClass == "G").ToList();
-            viewModel.listAccountRelationH = sdList.Where(x => x.oRelationClass == "H").ToList();
-             */ 
-            return PartialView("list", viewModel);
         }
 
         public string AccountRelationDataCreate(string fRelatClass, string fAccIndex, string fAccDeptNo)
         {
             string fReturnValue = ""; string fExecuteValue = "";
-            List<object> delDeclareValue = new List<object>() { fAccIndex, fAccDeptNo, fRelatClass };
-            List<string> delDeclareName = new List<string>() { "@AccIndex", "@AccDeptNo", "@RelationClass" };
+            List<object> delDeclareValue = new List<object>() { fAccIndex, fAccDeptNo, fRelatClass, "" };
+            List<string> delDeclareName = new List<string>() { "@AccIndex", "@AccDeptNo", "@RelationClass", "@RelationAccIndex" };
             fExecuteValue = dbClass.msExecuteDataBase("D", "AccountRelation", 0, delDeclareName, delDeclareValue);
             List<object> insDeclareValue = new List<object>() { fAccIndex, fAccDeptNo, fRelatClass, "" };
             fExecuteValue = dbClass.msExecuteDataBase("N", "AccountRelation", 0, aryDeclareName, insDeclareValue);
-            fReturnValue = "O";
+            fReturnValue = arModel.returnAccountRelationClassData(fRelatClass, fAccDeptNo);
             return fReturnValue;
         }
 
+        public string AccountRelationDataDelete(string fRelatClass, string fAccIndex, string fAccDeptNo)
+        {
+            string fReturnValue = ""; string fExecuteValue = "";
+            List<string> delDeclareName = new List<string>() { "@AccIndex", "@AccDeptNo", "@RelationClass", "@RelationAccIndex" };
+            List<object> delDeclareValue = new List<object>() { fAccIndex, fAccDeptNo, fRelatClass, "" };
+            fExecuteValue = dbClass.msExecuteDataBase("D", "AccountRelation", 0, delDeclareName, delDeclareValue);            
+            fReturnValue = arModel.returnAccountRelationClassData(fRelatClass, fAccDeptNo);
+            return fReturnValue;
+        }
+        
 
 
     }

@@ -85,7 +85,25 @@ namespace MvcDemand.Models
             return list;
         }
 
-        
+        public string returnAccountRelationClassData(string funRelationClass, string funAccDeptNo)
+        {
+            funReturnValue = "";
+            try {
+                List<oAccountRelation> liAccountRelation = new List<oAccountRelation>();
+                liAccountRelation = listAccountRelation().Where(x => x.oRelationClass == funRelationClass).ToList();
+                foreach(oAccountRelation item in liAccountRelation)
+                {
+                    funReturnValue += string.Format(@"
+                        <input type='checkbox' id='chk_{0}' onclick=""FormDataDelete('{1}','{2}','{3}')"" checked=""checked"" />({4}){5}<br />
+                    ", item.oAccIndex.ToString(), item.oAccIndex.ToString(), item.oAccDeptNo.ToString(), funRelationClass, item.oAccIndex.ToString(), item.oAccName.ToString());
+                }                
+            } catch (Exception ex) {
+                funReturnValue = ex.Message;
+            }
+            return funReturnValue;
+        }
+
+
     }
 
     public class oAccountRelation {

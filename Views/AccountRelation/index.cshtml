@@ -137,9 +137,9 @@
                 var aryAccountData = valSumAccountData.split('_');                
                 for (var i = 0; i < aryAccountData[i]; i++) {
                     if (idC.checked) {
-                        $('#chk_' + aryAccountData[i]).prop('checked', true);
+                        $('#check_' + aryAccountData[i]).prop('checked', true);
                     } else {
-                        $('#chk_' + aryAccountData[i]).prop('checked', false);
+                        $('#check_' + aryAccountData[i]).prop('checked', false);
                     }                    
                 }                
                 return false;
@@ -148,8 +148,7 @@
             FormDataCreate = function (funDeptNo) {
                 var FormURL = baseURL + "AccountRelation/AccountRelationDataCreate";
                 var rtnValue = "";
-                var aryAccountDeptData = $('#hideAccountDeptData').val().split('_');
-                alert(aryAccountDeptData.length);
+                var aryAccountDeptData = $('#hideAccountDeptData').val().split('_');                
                 for (var i = 0; i < aryAccountDeptData.length; i++) {
                     var vIndex = aryAccountDeptData[i].split('$')[0];
                     var vDeptNo = aryAccountDeptData[i].split('$')[1];                   
@@ -168,6 +167,37 @@
                             }
                         });
                     }
+                }
+                $('#data_' + funDeptNo).html(rtnValue);
+                var valSumAccountData = $('#hideAccountData').val();
+                var aryAccountData = valSumAccountData.split('_');
+                for (var i = 0; i < aryAccountData[i]; i++) {
+                    $('#check_' + aryAccountData[i]).prop('checked', false);
+                }
+                return false;
+            }
+
+            FormDataDelete = function (funAccIndex, funDeptNo, funRelatClass) {
+                var FormURL = baseURL + "AccountRelation/AccountRelationDataDelete";
+                var rtnValue = "";
+                var objData = { fRelatClass: funRelatClass, fAccIndex : funAccIndex, fAccDeptNo : funDeptNo };
+                $.ajax({
+                    url : FormURL,
+                    type: 'Post',
+                    data : objData,
+                    async : false,
+                    success : function(data) {
+                        rtnValue = data;
+                    },
+                    error : function(error, ajaxOption, thrownError){
+                        rtnValue = error.responseText;
+                    }
+                });                
+                $('#data_' + funRelatClass).html(rtnValue);
+                var valSumAccountData = $('#hideAccountData').val();
+                var aryAccountData = valSumAccountData.split('_');
+                for (var i = 0; i < aryAccountData[i]; i++) {
+                    $('#check_' + aryAccountData[i]).prop('checked', false);
                 }                
                 return false;
             }
@@ -177,121 +207,134 @@
         <table class="modal_body" style="width:1000px;" border="0" cellpadding="0" cellspacing="0">
             <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="8">新增帳號關聯資料</td></tr>
             <tr style="height:30px; font-weight:bold; font-size:18px">
-                <td style="width:250px; text-align:left" colspan="2">帳號清單</td>
-                <td style="width:250px; text-align:left" colspan="2"></td>
-                <td style="width:250px; text-align:left" colspan="2">單位清單</td>
-                <td style="width:250px; text-align:right" colspan="2"><input type="button" value="取消帳號關聯" width="200" height="30"  /></td>
+                <td style="width:125px; text-align:left">帳號清單</td>
+                <td style="width:125px; text-align:left" colspan="2"></td>
+                <td style="width:250px; text-align:right" colspan="2">單位清單</td>
+                <td style="width:250px; text-align:left" colspan="2">@Html.DropDownList("sAccDeptNo", (IEnumerable<SelectListItem>)Model.selAccDeptNo, new { Style = "width:90%; height:30px" })</td>
+                <td style="width:125px; text-align:right"><input type="button" value="取消帳號關聯" width="200" height="30" onclick="$('#form1').submit();"  /></td>
             </tr>
             <tr><td colspan="8"><hr /></td></tr>
             <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
-                <td style="width:250px; text-align:center">一般帳號</td>
-                <td style="width:250px; text-align:center">上級主管</td>
-                <td style="width:250px; text-align:center">二級主管</td>
-                <td style="width:250px; text-align:center">負責窗口</td>
-                <td style="width:250px; text-align:center">代理人</td>
-                <td style="width:250px; text-align:center">專案經理</td>
-                <td style="width:250px; text-align:center">系統分析師</td>
-                <td style="width:250px; text-align:center">開發工程師</td>
+                <td style="width:250px; text-align:center" colspan="2">一般帳號</td>
+                <td style="width:250px; text-align:center" colspan="2">上級主管</td>
+                <td style="width:250px; text-align:center" colspan="2">二級主管</td>
+                <td style="width:250px; text-align:center" colspan="2">負責窗口</td>
             </tr>
             <tr><td colspan="8"><hr /></td></tr>
-            <tr style="height:35px; font-size:12px;">
-                <td style="width:125px; text-align:left">
+            <tr style="height:35px; font-size:12px; vertical-align:top">
+                <td id="data_A" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationA.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationA[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationA[i].oAccIndex.ToString()','@Model.listAccountRelationA[i].oAccDeptNo.ToString()','A');" checked="checked" />
                         @:(
                         @Model.listAccountRelationA[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationA[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>
-                <td style="width:125px; text-align:left">
+                <td id="data_B" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationB.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationB[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationB[i].oAccIndex.ToString()','@Model.listAccountRelationB[i].oAccDeptNo.ToString()','B');" checked="checked" />
                         @:(
                         @Model.listAccountRelationB[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationB[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>
-                <td style="width:125px; text-align:left">
+                <td id="data_C" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationC.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationC[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationC[i].oAccIndex.ToString()','@Model.listAccountRelationC[i].oAccDeptNo.ToString()','C');" checked="checked" />
                         @:(
                         @Model.listAccountRelationC[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationC[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>
-                <td style="width:125px; text-align:left">
+                <td id="data_D" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationD.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationD[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationD[i].oAccIndex.ToString()','@Model.listAccountRelationD[i].oAccDeptNo.ToString()','D');" checked="checked" />
                         @:(
                         @Model.listAccountRelationD[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationD[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>  
-                <td style="width:125px; text-align:left">
+            </tr>
+            <tr style="height:40px; font-size:18px; font-weight:bold; color:white; background-color:#5F9EA0">
+                <td style="width:250px; text-align:center" colspan="2">代理人</td>
+                <td style="width:250px; text-align:center" colspan="2">專案經理</td>
+                <td style="width:250px; text-align:center" colspan="2">系統分析師</td>
+                <td style="width:250px; text-align:center" colspan="2">開發工程師</td>
+            </tr>
+            <tr><td colspan="8"><hr /></td></tr>
+            <tr style="height:35px; font-size:12px; vertical-align:top">
+                <td id="data_E" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationE.Count; i++)
                       {
-
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationE[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationE[i].oAccIndex.ToString()','@Model.listAccountRelationE[i].oAccDeptNo.ToString()','E');" checked="checked" />
                         @:(
                         @Model.listAccountRelationE[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationE[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>
-                <td style="width:125px; text-align:left">
+                <td id="data_F" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationF.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationF[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationF[i].oAccIndex.ToString()','@Model.listAccountRelationF[i].oAccDeptNo.ToString()','F');" checked="checked" />
                         @:(
                         @Model.listAccountRelationF[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationF[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>
-                <td style="width:125px; text-align:left">
+                <td id="data_G" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationG.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationG[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationG[i].oAccIndex.ToString()','@Model.listAccountRelationG[i].oAccDeptNo.ToString()','G');" checked="checked" />
                         @:(
                         @Model.listAccountRelationG[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationG[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
                 </td>
-                <td style="width:125px; text-align:left">
+                <td id="data_H" style="width:250px; text-align:left" colspan="2">
                     @{  for (int i = 0; i < Model.listAccountRelationH.Count; i++)
                       {
+                        @:<input type="checkbox" id="chk_@Model.listAccountRelationH[i].oAccIndex.ToString()" onclick="FormDataDelete('@Model.listAccountRelationH[i].oAccIndex.ToString()','@Model.listAccountRelationH[i].oAccDeptNo.ToString()','H');" checked="checked" />
                         @:(
                         @Model.listAccountRelationH[i].oAccNo.ToString();
-                        @:)<br />
+                        @:)
                         @Model.listAccountRelationH[i].oAccName.ToString();
                         @:<br />
                         }
 
                     }
-                </td>                              
+                </td>
             </tr>
             <tr><td colspan="8" style="text-align:left; font-size:13px; color:blue"><hr /><input type="checkbox" id="checkAll" onclick="CheckBoxSelAll(this);" />全選</td></tr>
             <tr><td colspan="8">
