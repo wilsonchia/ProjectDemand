@@ -63,8 +63,21 @@ namespace MvcDemand.Controllers
             fReturnValue = arModel.returnAccountRelationClassData(fRelatClass, fAccDeptNo);
             return fReturnValue;
         }
-        
 
+        public string RelationDataList(string fAccDeptNo)
+        {
+            string fReturnValue = "";
+            fReturnValue = (arModel.returnAccountRelationClassData("A", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("A", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("B", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("B", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("C", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("C", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("D", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("D", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("E", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("E", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("F", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("F", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("G", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("G", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationClassData("H", fAccDeptNo) == "") ? "N^" : arModel.returnAccountRelationClassData("H", fAccDeptNo) + "^";
+            fReturnValue += (arModel.returnAccountRelationDropdownList(fAccDeptNo) == "") ? "N" : arModel.returnAccountRelationDropdownList(fAccDeptNo);
+            return fReturnValue;
+        }
 
     }
 }

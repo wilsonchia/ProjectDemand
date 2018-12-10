@@ -90,15 +90,55 @@ namespace MvcDemand.Models
             funReturnValue = "";
             try {
                 List<oAccountRelation> liAccountRelation = new List<oAccountRelation>();
-                liAccountRelation = listAccountRelation().Where(x => x.oRelationClass == funRelationClass).ToList();
-                foreach(oAccountRelation item in liAccountRelation)
+                liAccountRelation = listAccountRelation().Where(x => x.oRelationClass == funRelationClass && x.oAccDeptNo == funAccDeptNo).ToList();
+                if (liAccountRelation.Count > 0)
                 {
-                    funReturnValue += string.Format(@"
+                    foreach (oAccountRelation item in liAccountRelation)
+                    {
+                        funReturnValue += string.Format(@"
                         <input type='checkbox' id='chk_{0}' onclick=""FormDataDelete('{1}','{2}','{3}')"" checked=""checked"" />({4}){5}<br />
                     ", item.oAccIndex.ToString(), item.oAccIndex.ToString(), item.oAccDeptNo.ToString(), funRelationClass, item.oAccIndex.ToString(), item.oAccName.ToString());
-                }                
+                    }
+                }
             } catch (Exception ex) {
                 funReturnValue = ex.Message;
+            }
+            return funReturnValue;
+        }
+
+        public string returnAccountRelationDropdownList(string funAccDeptNo)
+        {
+            funReturnValue = ""; List<oAccountRelation> list = new List<oAccountRelation>();
+            list = listAccountRelation(); list = list.Where(x => x.oAccDeptNo == funAccDeptNo).ToList();
+            if (list.Count > 0)
+            {
+                funReturnValue = "<table style='width:100%' border='0'>";
+                for (int i = 0; i < list.Count; i += 5)
+                {
+                    funReturnValue += "<tr style='height:35px; font-size:12px; color:blue; vertical-align:top'>";
+                    if (i <= list.Count - 1)
+                    {
+                        funReturnValue += string.Format("<td style='width:200px; text-align:left'><input type='checkbox' id='check_{0}' />({1}){2}</td>", list[i].oAccIndex.ToString(), list[i].oAccNo.ToString(), list[i].oAccName.ToString());
+                    }
+                    if (i + 1 <= list.Count - 1)
+                    {
+                        funReturnValue += string.Format("<td style='width:200px; text-align:left'><input type='checkbox' id='check_{0}' />({1}){2}</td>", list[i + 1].oAccIndex.ToString(), list[i + 1].oAccNo.ToString(), list[i + 1].oAccName.ToString());
+                    }
+                    if (i + 2 <= list.Count - 1)
+                    {
+                        funReturnValue += string.Format("<td style='width:200px; text-align:left'><input type='checkbox' id='check_{0}' />({1}){2}</td>", list[i + 2].oAccIndex.ToString(), list[i + 2].oAccNo.ToString(), list[i + 2].oAccName.ToString());
+                    }
+                    if (i + 3 <= list.Count - 1)
+                    {
+                        funReturnValue += string.Format("<td style='width:200px; text-align:left'><input type='checkbox' id='check_{0}' />({1}){2}</td>", list[i + 3].oAccIndex.ToString(), list[i + 3].oAccNo.ToString(), list[i + 3].oAccName.ToString());
+                    }
+                    if (i + 4 <= list.Count - 1)
+                    {
+                        funReturnValue += string.Format("<td style='width:200px; text-align:left'><input type='checkbox' id='check_{0}' />({1}){2}</td>", list[i + 4].oAccIndex.ToString(), list[i + 4].oAccNo.ToString(), list[i + 4].oAccName.ToString());
+                    }
+                    funReturnValue += "</tr>";
+                }
+                funReturnValue += "</table>";
             }
             return funReturnValue;
         }

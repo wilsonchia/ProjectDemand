@@ -132,6 +132,52 @@
         @Html.Hidden("hideAccountDeptData", Model.aryAccountDeptData)
         <script type="text/javascript">
 
+            $(function ($) {
+                $('#sAccDeptNo').change(selChangeDeptNo);
+            });
+
+            selChangeDeptNo = function () {
+                var valDeptNo = $('#sAccDeptNo :selected').val();
+                var rtnValue = "";
+                if (valDeptNo != "") {
+                    var FormURL = baseURL + "AccountRelation/RelationDataList";
+                    var objData = { fAccDeptNo: valDeptNo };
+                    $.ajax({
+                        url: FormURL,
+                        type: 'Post',
+                        data: objData,
+                        async: false,
+                        success: function (data) {
+                            rtnValue = data;
+                        },
+                        error: function (error, ajaxOption, thrownError) {
+                            rtnValue = error.responseText;
+                        }
+                    });
+                    var aryValue = rtnValue.split('^');
+                    $('#data_A').html(aryValue[0].replace('N', ''));
+                    $('#data_B').html(aryValue[1].replace('N', ''));
+                    $('#data_C').html(aryValue[2].replace('N', ''));
+                    $('#data_D').html(aryValue[3].replace('N', ''));
+                    $('#data_E').html(aryValue[4].replace('N', ''));
+                    $('#data_F').html(aryValue[5].replace('N', ''));
+                    $('#data_G').html(aryValue[6].replace('N', ''));
+                    $('#data_H').html(aryValue[7].replace('N', ''));
+                    $('#checksel').html(aryValue[8].replace('N', ''));
+                } else {
+                    $('#data_A').html("");
+                    $('#data_B').html("");
+                    $('#data_C').html("");
+                    $('#data_D').html("");
+                    $('#data_E').html("");
+                    $('#data_F').html("");
+                    $('#data_G').html("");
+                    $('#data_H').html("");
+                    $('#checksel').html("");
+                }
+                return false;
+            }
+
             CheckBoxSelAll = function (idC) {
                 var valSumAccountData = $('#hideAccountData').val();
                 var aryAccountData = valSumAccountData.split('_');                
@@ -337,7 +383,7 @@
                 </td>
             </tr>
             <tr><td colspan="8" style="text-align:left; font-size:13px; color:blue"><hr /><input type="checkbox" id="checkAll" onclick="CheckBoxSelAll(this);" />全選</td></tr>
-            <tr><td colspan="8">
+            <tr><td colspan="8" id="checksel">
                 <table style="width:100%" border="0">
                     @{  for (int i = 0; i < Model.listAccountDetail.Count; i+=5)
                         {
