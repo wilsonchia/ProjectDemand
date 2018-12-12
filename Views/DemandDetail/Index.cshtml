@@ -1,0 +1,49 @@
+﻿@using MvcDemand.Models
+@model DemandDetailModels
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    var baseURL = '@Html.Raw(Url.Content("~"))';
+    if (baseURL == '/') { baseURL = ""; }
+
+    $(function ($) {
+        $('#dropExecute').change(funcSelectChange);
+    });
+
+    funcSelectChange = function () {
+        var selValue = $('#dropExecute :selected').val();        
+        switch (selValue) {
+            case "":
+                
+                break;
+            case "N":               
+                $('#form1').attr("action", baseURL + "DemandDetail/Create");
+                $('#form1').submit();
+                break;            
+        }
+        return false;
+    }
+
+</script>
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "form1" }))
+{
+    <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+        <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">需求申請單明細<hr /></td></tr>
+        <tr style="height:35px;">
+            <td style="width:700px; text-align:left">
+                關鍵字 : @Html.TextBox("searchValue", (string)ViewBag.searchValue, new { Style = "width:600px; height:35px" })
+                <input type="submit" id="btnsubmit" value="查詢" style="width:100px; height:30px;font-weight:bold;font-size:18px" />
+            </td>
+            <td style="width:200px; text-align:right">
+                <select id="dropExecute" name="dropExecute" style="width:200px; height:30px;font-size:16px;font-weight:bold">
+                    <option value="">請選擇</option>
+                    <option value="N">新增需求申請單</option>                   
+                </select>
+            </td>
+        </tr>
+
+    </table>
+}

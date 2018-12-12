@@ -108,8 +108,9 @@ namespace MvcDemand.Models
 
         public string returnAccountRelationDropdownList(string funAccDeptNo)
         {
-            funReturnValue = ""; List<oAccountRelation> list = new List<oAccountRelation>();
-            list = listAccountRelation(); list = list.Where(x => x.oAccDeptNo == funAccDeptNo).ToList();
+            funReturnValue = "";
+            List<oAccountDetail> list = new List<oAccountDetail>();
+            list = adModel.listObjAccountDetail(); list = list.Where(x => x.oAccDeptNo == funAccDeptNo).ToList();            
             if (list.Count > 0)
             {
                 funReturnValue = "<table style='width:100%' border='0'>";

@@ -1,0 +1,92 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#textDemandDateS').datepicker({ dateFormat: "yy/mm/dd" });
+        $('#textDemandDateH').datepicker({ dateFormat: "yy/mm/dd" });
+    });
+
+</script>
+
+<table style="width:100%;font-size:14px;" border="0" cellpadding="0" cellspacing="0">
+    <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增系統需求申請單<hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">申請帳號</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandAccIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetail, new { Style = "width:60%; height:30px" })</td>
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">需求類別</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandClass", (IEnumerable<SelectListItem>)ViewBag.selDemandClass, new { Style = "width:50%; height:30px" })</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">上級主管</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandTopIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetailTop, new { Style = "width:60%; height:30px" })</td>
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">二級主管</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandManIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetailMan, new { Style = "width:60%; height:30px" })</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">代理人</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandAgentIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetailAgent, new { Style = "width:60%; height:30px" })</td>
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">開發後測試</td>
+        <td style="width:300px; text-align:left">@Html.CheckBox("checkDemandTest", false) 需測試</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">申請日期</td>
+        <td style="width:300px; text-align:left">@Html.TextBox("textDemandDateS", System.DateTime.Now.Date.ToShortDateString(), new { Style = "width:200px; height:30px" })</td>
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">希望完成日期</td>
+        <td style="width:300px; text-align:left">@Html.TextBox("textDemandDateH", "", new { Style = "width:200px; height:30px" })</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">需要上傳<br />相關文件或圖片</td>        
+        <td style="width:300px; text-align:left">@Html.CheckBox("checkDemandUpload", false) 需上傳檔案</td>
+        <td style="width:500px;" colspan="2"></td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">申請單標題</td>
+        <td style="width:800px; text-align:left" colspan="3">@Html.TextBox("textDemandTitle", "", new { Style = "width:850px; height:30px" })</td>        
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">申請單來源</td>
+        <td style="width:800px; text-align:left" colspan="3">@Html.TextBox("textDemandFrom", "", new { Style = "width:850px; height:30px" })</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">所屬專案系統</td>
+        <td style="width:800px; text-align:left" colspan="3">@Html.TextBox("textDemandProject", "", new { Style = "width:850px; height:30px" })</td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>    
+    <tr style="height:35px"><td style="width:100%; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold" colspan="4">申請說明內容</td></tr>
+    <tr style="height:35px">
+        <td style="width:100%; text-align:left" colspan="4">
+            @Html.TextArea("textDemandNotation", "", 30, 180, new { Style = "width:99%" })
+            <script>CKEDITOR.replace('textDemandNotation')</script>
+        </td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px"><td style="width:100%; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold" colspan="4">申請附註說明</td></tr>
+    <tr style="height:35px">
+        <td style="width:100%; text-align:left" colspan="4">
+            @Html.TextArea("textDemandRemark", "", 30, 180, new { Style = "width:99%" })
+            <script>CKEDITOR.replace('textDemandRemark')</script>
+        </td>
+    </tr>
+    <tr><td colspan="4"><hr /></td></tr>
+    <tr style="height:35px">
+        <td style="width:100%; text-align:center" colspan="4"><input type="checkbox" />我確認完成申請單<br /></td>
+    </tr>
+    <tr style="height:35px">
+        <td style="width:100%; text-align:center" colspan="4">
+            <input type="button" id="btnSubmitF" value="完成申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
+            <input type="button" id="btnSubmitU" value="上傳檔案" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
+            <input type="button" id="btnReturn" value="取消申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
+        </td>
+    </tr>
+</table>
+
