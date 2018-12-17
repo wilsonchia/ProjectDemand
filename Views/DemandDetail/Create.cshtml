@@ -1,21 +1,143 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@using (Html.BeginForm("Create", "DemandDetail", FormMethod.Post, new { id = "form1" }))
+{
 <script type="text/javascript">
+
+    var baseURL = '@Html.Raw(Url.Content("~"))';
+    if (baseURL == '/') { baseURL = ""; }
 
     $(function () {
         $('#textDemandDateS').datepicker({ dateFormat: "yy/mm/dd" });
         $('#textDemandDateH').datepicker({ dateFormat: "yy/mm/dd" });
     });
 
+    funReturnDropdown = function (strselValue) {        
+        if (strselValue != "") {
+            var FormURL = baseURL + "DemandDetail/returnValueToAccIndex";
+            var objData = { fAccIndex: strselValue };
+            $.ajax({
+                url: FormURL,
+                type: 'Post',
+                data: objData,
+                async: false,
+                success: function (data) {
+                    rtnValue = data;
+                },
+                error: function (error, ajaxOption, thrownError) {
+                    rtnValue = error.responseText;
+                }
+            });
+        }
+        if (rtnValue != "") {
+            var aryMenu = rtnValue.split('^');
+            $('#hideDemandAccIndex').val(strselValue);
+            $('#hideDemandAccDeptNo').val(aryMenu[0]);
+
+            if (aryMenu[1] != "Zero") {
+                $('#selDemandTopIndex').empty();
+                var aryDropA = aryMenu[1].split('|');
+                $('#selDemandTopIndex').append($("<option></option>").attr("value", "").text("請選擇"));               
+                for (var j = 0; j < aryDropA.length; j++) {
+                    if (aryDropA[j] != "") {
+                        $('#selDemandTopIndex').append($("<option></option>").attr("value", aryDropA[j].split('_')[0]).text("(" + aryDropA[j].split('_')[0] + ")(" + aryDropA[j].split('_')[1] + ")" + aryDropA[j].split('_')[2] + ""));                        
+                    }
+                }
+            } else { $('#selDemandTopIndex').empty(); $('#selDemandTopIndex').append($("<option></option>").attr("value", "").text("請選擇")); }
+
+            if (aryMenu[2] != "Zero") {
+                $('#selDemandManIndex').empty();
+                var aryDropB = aryMenu[2].split('|');
+                $('#selDemandManIndex').append($("<option></option>").attr("value", "").text("請選擇"));
+                for (var j = 0; j < aryDropB.length; j++) {
+                    if (aryDropB[j] != "") {
+                        $('#selDemandManIndex').append($("<option></option>").attr("value", aryDropB[j].split('_')[0]).text("(" + aryDropB[j].split('_')[0] + ")(" + aryDropB[j].split('_')[1] + ")" + aryDropB[j].split('_')[2] + ""));
+                    }
+                }
+            } else { $('#selDemandManIndex').empty(); $('#selDemandManIndex').append($("<option></option>").attr("value", "").text("請選擇")); }
+
+            if (aryMenu[3] != "Zero") {
+                $('#selDemandAgentIndex').empty();
+                var aryDropC = aryMenu[3].split('|');
+                $('#selDemandAgentIndex').append($("<option></option>").attr("value", "").text("請選擇"));
+                for (var j = 0; j < aryDropC.length; j++) {
+                    if (aryDropC[j] != "") {
+                        $('#selDemandAgentIndex').append($("<option></option>").attr("value", aryDropC[j].split('_')[0]).text("(" + aryDropC[j].split('_')[0] + ")(" + aryDropC[j].split('_')[1] + ")" + aryDropC[j].split('_')[2] + ""));
+                    }
+                }
+            } else { $('#selDemandAgentIndex').empty(); $('#selDemandAgentIndex').append($("<option></option>").attr("value", "").text("請選擇")); }
+        }        
+        return false;
+    }
+
+    funFormDataCreate = function () {
+        if ($('#selDemandAccIndex :selected').val() == "") {
+            alert("申請帳號不得空白!!"); return false;
+        } else {
+            $('#hideDemandAccIndex').val($('#selDemandAccIndex :selected').val());
+        }
+        if ($('#selDemandClass :selected').val() == "") {
+            alert("需求類別不得空白!!"); return false;
+        } else {
+            $('#hideDemandClass').val($('#selDemandClass :selected').val());
+        }
+        if ($('#selDemandTopIndex > option').length > 1) {
+            if ($('#selDemandTopIndex :selected').val() == "") {
+                alert("上級主管不得空白!!"); return false;
+            } else {
+                $('#hideDemandTopIndex').val($('#selDemandTopIndex :selected').val());
+            }
+        } else { $('#hideDemandTopIndex').val("");}
+        if ($('#selDemandManIndex > option').length > 1) {
+            if ($('#selDemandManIndex :selected').val() == "") {
+                alert("二級主管不得空白!!"); return false;
+            } else {
+                $('#hideDemandManIndex').val($('#selDemandManIndex :selected').val());
+            }
+        }
+        if ($('#selDemandAgentIndex > option').length > 1) {
+            if ($('#selDemandAgentIndex :selected').val() == "") {
+                alert("代理人不得空白!!"); return false;
+            } else {
+                $('#hideDemandAgentIndex').val($('#selDemandAgentIndex :selected').val());
+            }
+        }
+        if ($('#checkDemandTest').prop("checked") == true) { $('#hideDemandTest').val("O"); } else { $('#hideDemandTest').val("X"); }
+        if ($('#textDemandDateS').val() == "") { alert("申請日期不得空白!!"); return false; } else { $('#hideDemandDateS').val($('#textDemandDateS').val()); }
+        if ($('#textDemandDateE').val() != "") { $('#hideDemandDateE').val($('#textDemandDateE').val()); }
+        if ($('#checkDemandUpload').prop("checked") == true) { $('#hideDemandUpload').val("O"); } else { $('#hideDemandUpload').val("X"); }
+        if ($('#textDemandTitle').val() == "") { alert("申請單標題不得空白!!"); return false; } else { $('#hideDemandTitle').val($('#textDemandTitle').val()); }
+        if ($('#textDemandFrom').val() == "") { $('#hideDemandFrom').val($('#textDemandFrom').val()); }
+        if ($('#textDemandProject').val() == "") { $('#hideDemandproject').val($('#textDemandProject').val()); }
+
+        return false;
+    }
+
 </script>
+
+@Html.Hidden("hideDemandAccIndex", "")
+@Html.Hidden("hideDemandAccDeptNo", "")
+@Html.Hidden("hideDemandTitle", "")
+@Html.Hidden("hideDemandClass", "")
+@Html.Hidden("hideDemandTest", "")
+@Html.Hidden("hideDemandUpload", "")
+@Html.Hidden("hideDemandStep", "")
+@Html.Hidden("hideDemandFrom", "")
+@Html.Hidden("hideDemandProject", "")
+@Html.Hidden("hideDemandDateS", "")
+@Html.Hidden("hideDemandDateH", "")
+@Html.Hidden("hideDemandStatus", "")
+@Html.Hidden("hideDemandAccIndex", "")
+@Html.Hidden("hideDemandAgentIndex", "")
+@Html.Hidden("hideDemandTopIndex", "")
+@Html.Hidden("hideDemandManIndex", "")
 
 <table style="width:100%;font-size:14px;" border="0" cellpadding="0" cellspacing="0">
     <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增系統需求申請單<hr /></td></tr>
     <tr style="height:35px">
         <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">申請帳號</td>
-        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandAccIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetail, new { Style = "width:60%; height:30px" })</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandAccIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetail, new { Style = "width:60%; height:30px", onchange = "funReturnDropdown(this.value)" })</td>
         <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">需求類別</td>
         <td style="width:300px; text-align:left">@Html.DropDownList("selDemandClass", (IEnumerable<SelectListItem>)ViewBag.selDemandClass, new { Style = "width:50%; height:30px" })</td>
     </tr>
@@ -83,10 +205,10 @@
     </tr>
     <tr style="height:35px">
         <td style="width:100%; text-align:center" colspan="4">
-            <input type="button" id="btnSubmitF" value="完成申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
+            <input type="button" id="btnSubmitF" value="完成申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" onclick="return funFormDataCreate();" />
             <input type="button" id="btnSubmitU" value="上傳檔案" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
             <input type="button" id="btnReturn" value="取消申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
         </td>
     </tr>
 </table>
-
+}
