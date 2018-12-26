@@ -1,8 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using (Html.BeginForm("Create", "DemandDetail", FormMethod.Post, new { id = "form1" }))
-{
+
 <script type="text/javascript">
 
     var baseURL = '@Html.Raw(Url.Content("~"))';
@@ -11,6 +10,17 @@
     $(function () {
         $('#textDemandDateS').datepicker({ dateFormat: "yy/mm/dd" });
         $('#textDemandDateH').datepicker({ dateFormat: "yy/mm/dd" });
+        $('#checkDemandUpload').click(function () {
+            if (this.checked) {
+                $('#hideDemandUpload').val("O");                
+            } else {
+                $('#hideDemandUpload').val("X");
+            }
+            alert($('#hideDemandUpload').val());
+            alert($('#btnSubmitF').val());
+            if ($('#hideDemandUpload').val() == "O") { $('#btnSubmitF').val('上傳檔案'); } else { $('#btnSubmitF').val('完成申請單'); }
+            alert($('#btnSubmitF').val());
+        });
     });
 
     funReturnDropdown = function (strselValue) {        
@@ -105,39 +115,32 @@
         }
         if ($('#checkDemandTest').prop("checked") == true) { $('#hideDemandTest').val("O"); } else { $('#hideDemandTest').val("X"); }
         if ($('#textDemandDateS').val() == "") { alert("申請日期不得空白!!"); return false; } else { $('#hideDemandDateS').val($('#textDemandDateS').val()); }
-        if ($('#textDemandDateE').val() != "") { $('#hideDemandDateE').val($('#textDemandDateE').val()); }
+        if ($('#textDemandDateH').val() != "") { $('#hideDemandDateH').val($('#textDemandDateH').val()); }
         if ($('#checkDemandUpload').prop("checked") == true) { $('#hideDemandUpload').val("O"); } else { $('#hideDemandUpload').val("X"); }
         if ($('#textDemandTitle').val() == "") { alert("申請單標題不得空白!!"); return false; } else { $('#hideDemandTitle').val($('#textDemandTitle').val()); }
         if ($('#textDemandFrom').val() == "") { $('#hideDemandFrom').val($('#textDemandFrom').val()); }
-        if ($('#textDemandProject').val() == "") { $('#hideDemandproject').val($('#textDemandProject').val()); }
-
+        if ($('#textDemandProject').val() == "") { $('#hideDemandproject').val($('#textDemandProject').val()); }        
+        $('#form1').submit();
         return false;
     }
 
 </script>
-
-@Html.Hidden("hideDemandAccIndex", "")
-@Html.Hidden("hideDemandAccDeptNo", "")
-@Html.Hidden("hideDemandTitle", "")
-@Html.Hidden("hideDemandClass", "")
-@Html.Hidden("hideDemandTest", "")
-@Html.Hidden("hideDemandUpload", "")
-@Html.Hidden("hideDemandStep", "")
-@Html.Hidden("hideDemandFrom", "")
-@Html.Hidden("hideDemandProject", "")
-@Html.Hidden("hideDemandDateS", "")
-@Html.Hidden("hideDemandDateH", "")
-@Html.Hidden("hideDemandStatus", "")
-@Html.Hidden("hideDemandAccIndex", "")
-@Html.Hidden("hideDemandAgentIndex", "")
-@Html.Hidden("hideDemandTopIndex", "")
-@Html.Hidden("hideDemandManIndex", "")
+@using (Html.BeginForm("Create", "DemandDetail", FormMethod.Post, new { id = "form1" }))
+{
+@Html.Hidden("hideDemandAccIndex", "") @Html.Hidden("hideDemandAccDeptNo", "")
+@Html.Hidden("hideDemandTitle", "") @Html.Hidden("hideDemandClass", "")
+@Html.Hidden("hideDemandTest", "") @Html.Hidden("hideDemandUpload", "")
+@Html.Hidden("hideDemandStep", "") @Html.Hidden("hideDemandFrom", "")
+@Html.Hidden("hideDemandProject", "") @Html.Hidden("hideDemandDateS", "")
+@Html.Hidden("hideDemandDateH", "") @Html.Hidden("hideDemandStatus", "")
+@Html.Hidden("hideDemandAccIndex", "") @Html.Hidden("hideDemandAgentIndex", "")
+@Html.Hidden("hideDemandTopIndex", "") @Html.Hidden("hideDemandManIndex", "")
 
 <table style="width:100%;font-size:14px;" border="0" cellpadding="0" cellspacing="0">
     <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增系統需求申請單<hr /></td></tr>
     <tr style="height:35px">
         <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">申請帳號</td>
-        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandAccIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetail, new { Style = "width:60%; height:30px", onchange = "funReturnDropdown(this.value)" })</td>
+        <td style="width:300px; text-align:left">@Html.DropDownList("selDemandAccIndex", (IEnumerable<SelectListItem>)ViewBag.selAccountDetail, new { Style = "width:60%; height:30px", onchange = "funReturnDropdown(this.value);" })</td>
         <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">需求類別</td>
         <td style="width:300px; text-align:left">@Html.DropDownList("selDemandClass", (IEnumerable<SelectListItem>)ViewBag.selDemandClass, new { Style = "width:50%; height:30px" })</td>
     </tr>
@@ -199,14 +202,10 @@
             <script>CKEDITOR.replace('textDemandRemark')</script>
         </td>
     </tr>
-    <tr><td colspan="4"><hr /></td></tr>
-    <tr style="height:35px">
-        <td style="width:100%; text-align:center" colspan="4"><input type="checkbox" />我確認完成申請單<br /></td>
-    </tr>
+    <tr><td colspan="4"><hr /></td></tr>    
     <tr style="height:35px">
         <td style="width:100%; text-align:center" colspan="4">
-            <input type="button" id="btnSubmitF" value="完成申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" onclick="return funFormDataCreate();" />
-            <input type="button" id="btnSubmitU" value="上傳檔案" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
+            <input type="button" id="btnSubmitF" value="完成申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" onclick="return funFormDataCreate();" />            
             <input type="button" id="btnReturn" value="取消申請單" style="width:200px; height:30px; font-weight:bold; font-size:16px" />
         </td>
     </tr>

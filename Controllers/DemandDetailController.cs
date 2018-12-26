@@ -14,13 +14,18 @@ namespace MvcDemand.Controllers
         DemandDetailModels ddModel = new DemandDetailModels();
         AccountDetailModels adModel = new AccountDetailModels();
         AccountRelationModels arModel = new AccountRelationModels();
+        ClassDataBase dbClass = new ClassDataBase();
 
         //
         // GET: /DemandDetail/
 
-        public ActionResult Index()
+        public ActionResult Index(DemandDetailModels viewModel)
         {
-            return View();
+            viewModel.objDemandDetail = ddModel.objDemandDetailData();
+            ViewBag.objDemandDetail = ddModel.objDemandDetailData();
+            ViewBag.valCountSum = viewModel.objDemandDetailData().Count().ToString();
+
+            return View(viewModel);
         }
 
         public ActionResult Create(DemandDetailModels viewModel)
@@ -38,15 +43,61 @@ namespace MvcDemand.Controllers
             return View(viewModel);
         }
 
+        
         [HttpPost]
         [ValidateInput(false)]
         public RedirectResult Create(FormCollection form)
         {
-
-
-            return Redirect("");
+            string funMaxDemandIndex = ddModel.returnDemandMaxIndex(); 
+            List<string> listSchDeclare = new List<string>() { "@DemandIndex", "@DemandStep", "@SchAccIndex", "@SchNotation", "@SchDateTime", "@SchStatus" };
+            List<string> aryDeclare = new List<string>() { "@DemandIndex","@DemandDate","@DemandTitle","@DemandClass","@DemandTest"
+                        ,"@DemandUpload","@DemandStep","@DemandFrom","@DemandProject","@DemandDateS"
+                        ,"@DemandDateE","@DemandDateH","@DemandNotation","@DemandRemark","@DemandStatus"
+                        ,"@DemandAccIndex","@DemandAgentIndex","@DemandTopIndex","@DemandManIndex", "@Update_DateTime"
+                        ,"@Create_DateTime" };
+            List<object> aryValue = new List<object>(){ funMaxDemandIndex, dbClass.ReturnDetailToNowDateTime("VF"), form["textDemandTitle"].ToString(), form["hideDemandClass"], form["hideDemandTest"]
+                , form["hideDemandUpload"], "A", form["textDemandFrom"], form["textDemandProject"], form["textDemandDateS"]
+                , "", form["textDemandDateH"], HttpUtility.HtmlEncode(form["textDemandNotation"]), HttpUtility.HtmlEncode(form["textDemandRemark"]), "X"
+                , form["hideDemandAccIndex"].Replace(',',' ').Trim(), form["hideDemandAgentIndex"], form["hideDemandTopIndex"], form["hideDemandManIndex"], dbClass.ReturnDetailToNowDateTime("VF"), ""};            
+            
+            string fExecuteValue = dbClass.msExecuteDataBase("N", "DemandDetail", 0, aryDeclare, aryValue);
+            string DemandStepST = (form["hideDemandUpload"] == "O") ? "X" : "O";
+            List<object> listSchValue = new List<object>(); string fExecSchValue = "";
+            if (form["hideDemandAccIndex"] != "") {
+                listSchValue = new List<object>() { funMaxDemandIndex, "A", form["hideDemandAccIndex"].Replace(',', ' ').Trim(), "", dbClass.ReturnDetailToNowDateTime("VF"), DemandStepST };
+                fExecSchValue = dbClass.msExecuteDataBase("N", "DemandSchedule", 0, listSchDeclare, listSchValue);
+            }            
+            if (form["hideDemandAgentIndex"] != "")
+            {
+                listSchValue = new List<object>() { funMaxDemandIndex, "A", form["hideDemandAgentIndex"].Replace(',', ' ').Trim(), "", dbClass.ReturnDetailToNowDateTime("VF"), DemandStepST };
+                fExecSchValue = dbClass.msExecuteDataBase("N", "DemandSchedule", 0, listSchDeclare, listSchValue);
+            }
+            if (form["hideDemandTopIndex"] != "")
+            {
+                listSchValue = new List<object>() { funMaxDemandIndex, "C", form["hideDemandTopIndex"].Replace(',', ' ').Trim(), "", dbClass.ReturnDetailToNowDateTime("VF"), "X" };
+                fExecSchValue = dbClass.msExecuteDataBase("N", "DemandSchedule", 0, listSchDeclare, listSchValue);
+            }
+            if (form["hideDemandManIndex"] != "")
+            {
+                listSchValue = new List<object>() { funMaxDemandIndex, "D", form["hideDemandManIndex"].Replace(',', ' ').Trim(), "", dbClass.ReturnDetailToNowDateTime("VF"), "X" };
+                fExecSchValue = dbClass.msExecuteDataBase("N", "DemandSchedule", 0, listSchDeclare, listSchValue);
+            }
+            if (form["hideDemandUpload"] == "O")
+            {
+                return Redirect("~/DemandDetail/Index");            
+            } else {
+                return Redirect("~/DemandDetail/Upload?fDemandIndex=" + funMaxDemandIndex);            
+            }
+            
         }
 
+        public ActionResult Upload(DemandDetailModels viewModel, string fDemandIndex)
+        {
+            viewModel.vDemandIndex = fDemandIndex;
+            ViewBag.vDemandIndex = fDemandIndex;
+            return View(viewModel);
+        }
+        
         public string returnValueToAccIndex(string fAccIndex)
         {
             string returnValue = ""; string oAccDeptNo = "";

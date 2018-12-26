@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    MvcDemand.ClassDataBase dbClass = new MvcDemand.ClassDataBase();
 }
 <script type="text/javascript">
 
@@ -19,9 +20,8 @@
             case "":
                 
                 break;
-            case "N":               
-                $('#form1').attr("action", baseURL + "DemandDetail/Create");
-                $('#form1').submit();
+            case "N":
+                parent.location.href = baseURL + "DemandDetail/Create";                
                 break;            
         }
         return false;
@@ -30,20 +30,53 @@
 </script>
 @using (Html.BeginForm("", "", FormMethod.Post, new { id = "form1" }))
 {
+    int countTop = 0;
+    int countDown = Convert.ToInt32(ViewBag.valCountSum);
+
     <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
-        <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="2">需求申請單明細<hr /></td></tr>
+        <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="11">需求申請單明細<hr /></td></tr>
         <tr style="height:35px;">
-            <td style="width:700px; text-align:left">
+            <td style="width:700px; text-align:left" colspan="9">
                 關鍵字 : @Html.TextBox("searchValue", (string)ViewBag.searchValue, new { Style = "width:600px; height:35px" })
                 <input type="submit" id="btnsubmit" value="查詢" style="width:100px; height:30px;font-weight:bold;font-size:18px" />
             </td>
-            <td style="width:200px; text-align:right">
+            <td style="width:200px; text-align:right" colspan="2">
                 <select id="dropExecute" name="dropExecute" style="width:200px; height:30px;font-size:16px;font-weight:bold">
                     <option value="">請選擇</option>
-                    <option value="N">新增需求申請單</option>                   
+                    <option value="N">新增需求申請單</option>
                 </select>
             </td>
         </tr>
-
-    </table>
+        <tr style="height:35px; color:white;font-size:18px; background-color:blue; text-align:center">
+            <td style="width:100px;">序號</td>
+            <td style="width:100px">申請日期</td>
+            <td style="width:100px">類別</td>
+            <td style="width:100px">進度</td>
+            <td style="width:100px">狀態</td>
+            <td style="width:50px">測試</td>
+            <td style="width:50px">檔案</td>
+            <td style="width:100px">申請日期</td>
+            <td style="width:100px">申請帳號</td>
+            <td style="width:50px">明細</td>
+            <td style="width:50px">流程單</td>
+        </tr>
+        <tr><td style="width:100%" colspan="11"><hr /></td></tr>
+            @for (int i = countTop; i < countDown; i++)
+            {
+                <tr style="height:30px">
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandIndex.ToString()</td>
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandDate.ToString().Substring(0,8)</td>
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandClassTitle.ToString()</td>
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandStepTitle.ToString()</td>
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandStatusTitle.ToString()</td>
+                    <td style="width:50px; text-align:center">@Model.objDemandDetail[i].oDemandTest.ToString()</td>
+                    <td style="width:50px; text-align:center">@Model.objDemandDetail[i].oDemandUpload.ToString()</td>
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandDateS.ToString()</td>
+                    <td style="width:100px; text-align:center">@Model.objDemandDetail[i].oDemandAccNumberName.ToString()</td>
+                    <td style="width:50px; text-align:center">明細</td>
+                    <td style="width:50px; text-align:center">流程</td>
+                </tr>
+                <tr><td colspan="11"><hr /></td></tr>
+            }
+        </table>
 }

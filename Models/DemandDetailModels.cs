@@ -10,7 +10,7 @@ namespace MvcDemand.Models
 {
     public class DemandDetailModels
     {
-
+        ClassDataBase dbClass = new ClassDataBase();
         AccountRelationModels arModel = new AccountRelationModels();
 
         public List<oDemandDetail> objDemandDetail = new List<oDemandDetail>();
@@ -20,7 +20,7 @@ namespace MvcDemand.Models
         public List<SelectListItem> selAccountDetailMan = new List<SelectListItem>();
         public List<SelectListItem> selDemandClass = new List<SelectListItem>();
         
-        public string voDemandIndex { get; set; }
+        public string vDemandIndex { get; set; }
         public string vDemandDate { get; set; }
         public string vDemandTitle { get; set; }
         public string vDemandClass { get; set; }
@@ -80,6 +80,104 @@ namespace MvcDemand.Models
                 }
             }
             return list;
+        }
+
+        public DataTable returnDataTableDemandDetail()
+        {
+            Dictionary<string, object> funDicParas = new Dictionary<string,object>(); 
+            DataTable rtnDT = new DataTable(); funQuerySQL = ""; funDicParas = null;
+            try {
+                funQuerySQL = string.Format(@"Select dd.*, sda.systemtitle as DemandClassTitle 
+                                , sdb.SystemTitle as DemandStepTitle, sdc.systemtitle as DemandStatusTitle
+                                , isnull(ada.AccNo,'') as AccNumber, isnull(ada.AccName,'') as AccName
+                                , isnull(adb.AccNo,'') as AgentNumber, isnull(adb.accname,'') as AgentName
+                                , isnull(adc.AccNo,'') as TopNumber, isnull(adc.AccName,'') as TopName
+                                , isnull(ade.AccNo,'') as ManNumber, isnull(ade.AccName,'') as ManName
+                                from DemandDetail dd 
+	                            inner join SystemDataDetail sda on sda.SystemClass='DemandClass' and sda.SystemValue = dd.DemandClass
+	                            inner join SystemDataDetail sdb on sdb.SystemClass='DemandStep' and sdb.SystemValue= dd.DemandStep
+	                            inner join SystemDataDetail sdc on sdc.SystemClass='DemandStatus' and sdc.SystemValue=dd.DemandStatus
+	                            left join AccountDetail ada on ada.AccIndex=dd.DemandAccIndex 
+	                            left join AccountDetail adb on adb.AccIndex = dd.DemandAgentIndex
+	                            left join AccountDetail adc on adc.AccIndex = dd.DemandTopIndex
+	                            left join AccountDetail ade on ade.AccIndex = dd.DemandManIndex");
+                rtnDT = dbClass.msDataTableToDataBase(funQuerySQL, funDicParas);
+            } catch (Exception ex) {
+                rtnDT.Clear();
+            }
+            return rtnDT;
+        }
+
+        public List<oDemandDetail> objDemandDetailData()
+        {
+            List<oDemandDetail> list = new List<oDemandDetail>();
+            try {
+                list = (from dt in returnDataTableDemandDetail().AsEnumerable()
+                        select new oDemandDetail
+                        {
+                            oDemandIndex = dt.Field<string>("DemandIndex"), oDemandDate = dt.Field<string>("DemandDate"),
+                            oDemandTitle = dt.Field<string>("DemandTitle"), oDemandClass = dt.Field<string>("DemandClass"),
+                            oDemandTest = dt.Field<string>("DemandTest"),  oDemandUpload = dt.Field<string>("DemandUpload"),
+                            oDemandStep = dt.Field<string>("DemandStep"),  oDemandFrom = dt.Field<string>("DemandFrom"),
+                            oDemandProject = dt.Field<string>("DemandProject"), oDemandDateS = dt.Field<string>("DemandDateS"),
+                            oDemandDateE = dt.Field<string>("DemandDateE"), oDemandDateH = dt.Field<string>("DemandDateH"),
+                            oDemandNotation = dt.Field<string>("DemandNotation"), oDemandRemark = dt.Field<string>("DemandRemark"),
+                            oDemandStatus = dt.Field<string>("DemandStatus"), oDemandAccIndex = dt.Field<string>("DemandAccIndex"),
+                            oDemandAgentIndex = dt.Field<string>("DemandAgentIndex"), oDemandTopIndex = dt.Field<string>("DemandTopIndex"),
+                            oDemandManIndex = dt.Field<string>("DemandManIndex"), oUpdate_DateTime = dt.Field<string>("Update_DateTime"),
+                            oCreate_DateTime = dt.Field<string>("Create_DateTime"),
+                            oDemandClassTitle = dt.Field<string>("DemandClassTitle"),
+                            oDemandStepTitle = dt.Field<string>("DemandStepTitle"),
+                            oDemandStatusTitle = dt.Field<string>("DemandStatusTitle"),
+                            oDemandAccNumber = dt.Field<string>("AccNumber"),
+                            oDemandAccNumberName = dt.Field<string>("AccName"),
+                            oDemandAgentNumber = dt.Field<string>("AgentNumber"),
+                            oDemandAgentName = dt.Field<string>("AgentName"),
+                            oDemandTopNumber = dt.Field<string>("TopNumber"),
+                            oDemandTopName = dt.Field<string>("TopName"),
+                            oDemandManNumber = dt.Field<string>("ManNumber"),
+                            oDemandManName = dt.Field<string>("ManName")
+                        }).ToList();
+            } catch (Exception ex) {
+                list = null;
+            }
+            return list;
+        }
+
+
+        /*
+        public List<oDemandDetail> objDemandDetailData()
+        {
+
+
+        }
+        */
+
+
+        public string returnDemandMaxIndex()
+        {
+            funReturnValue = ""; funQuerySQL = ""; DataTable rtnDT = new DataTable(); string funMaxIndex = "";
+            List<string> fDeclare = new List<string>(); List<object> fValue = new List<object>();
+            Dictionary<string,object> dicPara = new Dictionary<string,object>(); dicPara = null;
+            try {
+                string nowMonth = dbClass.ReturnDetailToNowDateTime("VM");
+                funQuerySQL = string.Format(@"select isnull(max(DemandIndex),'') as MaxIndex from DemandDetail 
+                             where substring(DemandDate,1,6)='{0}' ", nowMonth);
+                rtnDT = dbClass.msDataTableToDataBase(funQuerySQL, dicPara);
+                if (rtnDT.Rows.Count > 0)
+                {
+                    funMaxIndex = rtnDT.Rows[0]["MaxIndex"].ToString();
+                    funMaxIndex = nowMonth + Convert.ToInt32(Convert.ToInt32(funMaxIndex.Substring(6, 4)) + 1).ToString().PadLeft(4, '0').ToString();
+                } else {
+                    funMaxIndex = nowMonth+ "0001";
+                }
+                funReturnValue = funMaxIndex;
+            }
+            catch (Exception ex)
+            {
+                funReturnValue = ex.Message;
+            }
+            return funReturnValue;
         }
 
     }

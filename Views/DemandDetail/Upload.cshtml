@@ -3,4 +3,49 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Upload</h2>
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.Hidden("hideDemandIndex", (string)ViewBag.vDemandIndex)
+    @Html.Hidden("hideFileIndex", "")   @Html.Hidden("hideFileClass", "")
+    @Html.Hidden("hideFileName", "")    @Html.Hidden("hideFileDate", "")
+    @Html.Hidden("hideFileNotation", "")    @Html.Hidden("hideFileSort", "")
+    @Html.Hidden("hideFileStatus", "")    @Html.Hidden("hideFileNameExt", "")
+
+    <div id="showDataCreate" class="modal" style="text-align:center">
+        <script type="text/javascript">
+
+            
+
+        </script>
+        <table class="modal_body" style="width:700px;" border="0" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">新增申請單上傳檔案</td></tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">需求單號</td>
+                <td style="width:600px; text-align:left" colspan="3">@Html.Display((string)ViewBag.vDemandIndex)</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">檔案類別</td>
+                <td style="width:250px; text-align:left">@Html.DropDownList("selAccClass", (IEnumerable<SelectListItem>)ViewBag.selAccClass, new { Style = "width:90%; height:30px" })</td>
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">檔案排序</td>
+                <td style="width:250px; text-align:left"></td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:100px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">上傳檔案</td>
+                <td style="width:250px; text-align:left"></td>                
+            </tr>            
+            <tr><td colspan="4"><span id="showMess"></span></td></tr>
+            <tr style="height:30px">
+                <td style="width:100%; text-align:center" colspan="4">
+                    <input type="button" id="btnFormC" value="確認新增" style="width:200px; height:30px;font-weight:bold; font-size:18px" />
+                    <input type="button" id="btnCleanC" value="取消新增" style="width:200px; height:30px; font-weight:bold; font-size:18px" />
+                </td>
+            </tr>
+            <tr><td colspan="4"><br /></td></tr>
+        </table>
+
+    </div>
+
+
+
+
+}
