@@ -1,0 +1,108 @@
+﻿@using MvcDemand.Models
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link rel="stylesheet" href="~/Content/Site.css" type="text/css" />
+    <script src="http://localhost/demand/Scripts/jquery-3.3.1.js" type="text/javascript"></script>
+    <script src="http://localhost/demand/Scripts/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="http://localhost/demand/Scripts/notify.js" type="text/javascript"></script>
+    <script src="http://localhost/demand/Scripts/notify.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <script type="text/javascript">
+
+        var baseURL = '@Html.Raw(Url.Content("~"))';
+        if (baseURL == '/') { baseURL = ""; }
+
+        $(function ($) {
+            var widths = $(window).width();
+            var widthv = eval(eval(eval(widths) - eval(600)) / 2);
+            $('#topl').width(widthv); $('#topr').width(widthv);
+            $('#mainl').width(widthv); $('#mainr').width(widthv);
+            $('#downl').width(widthv); $('#downr').width(widthv);
+            $('#textLoginNo').focus();
+        });
+
+        formLoginCheck = function () {
+            var fLoginNo = ""; var fLoginPass = ""; var rtnValue = "";
+            if ($('#textLoginNo').val() == "") { $('#showMess').notify("帳號不得空白!!"); $('#textLoginNo').focus(); return false; }
+            if ($('#textLoginPass').val() == "") { $('#showMess').notify("密碼不得空白!!"); $('#textLoginPass').focus(); return false; }
+            LoginNo = $('#textLoginNo').val();
+            LoginPass = $('#textLoginPass').val();
+            var FormURL = baseURL + "Home/returnCheckLoginData";
+            var objData = { fLoginNo: LoginNo, fLoginPass : LoginPass };
+            $.ajax({
+                url: FormURL,
+                type: 'Post',
+                data: objData,
+                async: false,
+                success: function (data) {
+                    rtnValue = data;
+                },
+                error: function (error, ajaxOption, thrownError) {
+                    rtnValue = error.responseText;
+                }
+            });
+            if (rtnValue.split('_')[0] == "O") {
+                $('#hideAccIndex').val(rtnValue.split('_')[1]);
+                $('#hideAccNo').val(LoginNo);
+                $('#form1').attr("action", baseURL + "Home/LoginSessionValue");
+                $('#form1').submit();
+            } else {
+                $('#showMess').notify(rtnValue.split('_')[1]);
+                if (rtnValue.split('_')[1] == "帳號不正確") {
+                    $('#textLoginNo').focus();
+                    return false;
+                } else {
+                    $('#textLoginPass').focus();
+                    return false;
+                }
+            }            
+        }
+
+    </script>
+    <div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id="form1"})) {
+        @Html.Hidden("hideAccIndex", "")
+        @Html.Hidden("hideAccNo", "")
+        <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td id="topl"></td>
+                <td style="width:600px; height:35px; font-size:24px; color:white; font-weight:bold; text-align:center">
+                    需求申請單系統登入頁面
+                </td>
+                <td id="topr"></td>
+            </tr>
+            <tr class="main" style="background-color:#FDF5E6"><td id="mainl"></td><td style="width:600px;">
+                <table style="width:100%" border="0">
+                    <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">需求申請單系統登入畫面<hr /></td></tr>
+                    <tr style="height:35px; font-size:18px; font-weight:bold">
+                        <td style="width:250px; text-align:left; background-color:#5F9EA0; color:white;">請登入帳號</td>
+                        <td style="width:350px; text-align:left">@Html.TextBox("textLoginNo", "", new { Style = "width:95%; height:30px" })</td>
+                    </tr>                    
+                    <tr style="height:35px; font-size:18px; font-weight:bold">
+                        <td style="width:250px; text-align:left; background-color:#5F9EA0; color:white;">請登入密碼</td>
+                        <td style="width:350px; text-align:left">@Html.Password("textLoginPass", "", new { Style = "width:95%; height:30px" })</td>
+                    </tr>                    
+                    <tr style="height:35px; font-size:18px; font-weight:bold">
+                        <td style="width:100%; text-align:center; background-color:#5F9EA0; color:white;" colspan="2">
+                            <input type="submit" id="submitLogin" value="登入驗證" style="width:300px; height:35px; font-size:18px; font-weight:bold" onclick="formLoginCheck();" />
+                        </td>                        
+                    </tr>
+                    <tr><td colspan="2"><span id="showMess"></span></td></tr>
+                </table>
+
+            </td><td id="mainr"></td></tr>
+
+            <tr class="down"><td id="downl"></td><td style="width:600px"></td><td id="downr"></td></tr>
+        </table>
+}
+    </div>
+</body>
+</html>

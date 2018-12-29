@@ -24,6 +24,10 @@
         
     </style>
     <script type="text/javascript">
+
+        var baseURL = '@Html.Raw(Url.Content("~"))';
+        if (baseURL == '/') { baseURL = ""; }
+
         $(function ($) {
             var widths = $(window).width();
             var widthv = eval(eval(eval(widths) - eval(1000)) / 2);
@@ -49,6 +53,36 @@
 
 
     </script>
+    <style>
+        .modalPM {
+            text-align: center;
+            position: fixed;
+            z-index: 1;
+            top: 5%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 100%;
+            background-color: rgba(0,0,0,0.6) !important;
+        }
+
+        .modal_bodyPM {
+            text-align: center;
+            position: absolute;
+            background-color: #F6F6F6;
+            /*background-color: white;*/
+            /*width:90%;*/
+            /*width: 870px;*/
+            top: 10%;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            border-style: solid;
+            border-color: #2E6E9E;
+        }
+
+    </style>
     <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
         <tr class="top"><td id="topl"></td><td style="width:100px"></td><td style="width:900px">
             <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
@@ -58,13 +92,67 @@
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("使用帳號", "Index", "AccountDetail")</td>
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("帳號關聯", "Index", "AccountRelation")</td>
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("需求申請", "Index", "DemandDetail")</td>
-                    <td style="width:120px; text-align:center"></td>                    
-                    <td style="width:120px; text-align:center"></td>                    
-                    <td style="width:120px; text-align:center"></td>                    
+                    <td style="width:120px; text-align:center">@Html.ActionLink("修改密碼", null, null, new { onclick = "$('#PassMod').fadeIn('show');", href = "#" })</td>
+                    <td style="width:120px; text-align:center">@Html.ActionLink("登出系統", "LogOut", "Home")</td>
+                    <td style="width:120px; text-align:center">@Session["AccIndex"].ToString()</td>
                 </tr>
             </table>
         </td><td id="topr"></td></tr>
         <tr class="main" style="background-color:#FDF5E6"><td id="mainl"></td><td style="width:1000px;" colspan="2">@RenderBody()</td><td id="mainr"></td></tr>
         <tr class="down"><td id="downl"></td><td style="width:1000px" colspan="2"></td><td id="downr"></td></tr>
     </table>
+    <div id="PassMod" class="modalPM" style="display:none;text-align:center">
+        @Html.Hidden("hideAccIndex", @Session["AccIndex"].ToString())
+        <script type="text/javascript">
+
+
+            formPassMod = function () {
+                if ($('#textPassOld').val() == "") { alert("原有密碼不得空白!!"); $('#textPassOld').focus(); return false; }
+                alert($('#textPassOld').val());
+                alert($('#hideAccIndex').val());
+                var FormURL = baseURL + "Home/funExecutePassword";
+                var objData = { execClass: 'C', fAccIndex: $('#hideAccIndex').val(), fPassword: $('#textPassOld').val(), nPassword : '' };
+                $.ajax({
+                    url: FormURL,
+                    type: 'Post',
+                    data: objData,
+                    async: false,
+                    success: function (data) {
+                        rtnValue = data;
+                    },
+                    error: function (error, ajaxOption, thrownError) {
+                        rtnValue = error.responseText;
+                    }
+                });
+                alert(rtnValue);
+                //alert($('#hideAccIndex').val());
+                return false;
+            }
+
+        </script>
+        <table class="modal_bodyPM" style="width:500px;" border="0" cellpadding="0" cellspacing="0">
+            <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="4">修改登入帳號密碼<hr /></td></tr>
+            <tr style="height:30px">
+                <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">登入帳號</td>
+                <td style="width:300px; text-align:left">@Session["AccNo"].ToString()</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">原有密碼</td>
+                <td style="width:300px; text-align:left">@Html.Password("textPassOld", "")</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">新密碼</td>
+                <td style="width:300px; text-align:left">@Html.Password("textPassNew", "")</td>
+            </tr>
+            <tr style="height:30px">
+                <td style="width:200px; text-align:center; background-color:#5F9EA0; color:white;font-weight:bold">確認新密碼</td>
+                <td style="width:300px; text-align:left">@Html.Password("textPassNewC", "")</td>
+            </tr>
+            <tr style="height:35px; font-size:18px; font-weight:bold">
+                <td style="width:100%; text-align:center; background-color:#5F9EA0; color:white;" colspan="2">
+                    <input type="button" id="submitPWD" value="確認修改" style="width:300px; height:35px; font-size:18px; font-weight:bold" onclick="formPassMod();" />
+                </td>
+            </tr>
+        </table>
+    </div>
 </body></html>
