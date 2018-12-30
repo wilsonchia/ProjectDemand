@@ -218,4 +218,15 @@ namespace MvcDemand.Models
         public string oDemandManNumber { get; set; }
         public string oDemandManName { get; set; }
     }
+
+    public class oDemandSchedule
+    {
+        public string oDemandIndex { get; set; }
+        public string oDemandStep { get; set; }
+        public string oSchAccIndex { get; set; }
+        public string oSchNotation { get; set; }
+        public string oSchDateTime { get; set; }
+        public string oSchStatus { get; set; }
+    }
+
 }

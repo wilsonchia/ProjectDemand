@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MvcDemand.Models;
+using System.Data;
 
 namespace MvcDemand.Controllers
 {
@@ -12,6 +13,8 @@ namespace MvcDemand.Controllers
 
         ClassDataBase dbClass = new ClassDataBase();
         AccountDetailModels adModel = new AccountDetailModels();
+        AccountRelationModels arModel = new AccountRelationModels();
+        DemandDetailModels ddModel = new DemandDetailModels();
 
 
         public ActionResult Index()
@@ -20,6 +23,9 @@ namespace MvcDemand.Controllers
             {
                 return Redirect("~/Home/Login");
             } else {
+                List<oDemandDetail> objDemandDetail = new List<oDemandDetail>();
+                objDemandDetail = ddModel.objDemandDetailData();
+
                 return View();
             }
             
@@ -67,38 +73,26 @@ namespace MvcDemand.Controllers
         public string funExecutePassword(string execClass, string fAccIndex, string fPassword , string nPassword)
         {
             string funReturnValue = ""; string cPassValue = "";
-            
-            
             List<oAccountDetail> oAccountDetail = new List<oAccountDetail>();
             oAccountDetail = adModel.listObjAccountDetail();
-            if (oAccountDetail.Where(x => x.oAccIndex == fAccIndex).ToList() == null)
-            {
+            if (oAccountDetail.Where(x => x.oAccIndex == fAccIndex).ToList() == null) {
                 funReturnValue = "X_帳號不存在";
-            }
-            else
-            {
+            } else {
                 oAccountDetail = oAccountDetail.Where(x => x.oAccIndex == fAccIndex).ToList();
-                if (oAccountDetail.Count() > 0)
-                {
-                    cPassValue = oAccountDetail[0].oAccPassword.ToString();
-                    if (execClass == "C")
-                    {
+                if (oAccountDetail.Count() > 0) {
+                    if (execClass == "C") {
+                        cPassValue = oAccountDetail[0].oAccPassword.ToString();
                         funReturnValue = cPassValue == fPassword ? string.Format(@"O_{0}", oAccountDetail[0].oAccIndex.ToString()) : "X_密碼不正確";
-                    }
-                    else
-                    {
+                    } else {
                         List<string> PassModDeclare = new List<string>(); List<object> PassModValue = new List<object>();
                         PassModDeclare = new List<string>() { "@AccIndex", "@AccPassword" };
                         PassModValue = new List<object>() { fAccIndex, nPassword };
                         funReturnValue = dbClass.msExecuteDataBase("U", "AccountDetail", 1, PassModDeclare, PassModValue);
                     }
-                }
-                else
-                {
+                } else {
                     funReturnValue = "X_帳號不存在";
                 }
             }
-             
             return funReturnValue;
         }
 

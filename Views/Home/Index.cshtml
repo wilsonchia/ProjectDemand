@@ -1,6 +1,24 @@
-﻿@{
+﻿@using MvcDemand.Models
+@model HomeModels
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<table style="width:100%" border="1" cellpadding="0" cellspacing="0">
+    <tr style="height:40px; font-size:20px; font-weight:bold"><td style="width:100%; text-align:center" colspan="11">需求申請單未點選清單<hr /></td></tr>
+    <tr style="height:35px; color:white;font-size:18px; background-color:blue; text-align:center">
+        <td style="width:100px;">序號</td>
+        <td style="width:100px">申請日期</td>
+        <td style="width:100px">類別</td>
+        <td style="width:100px">進度</td>
+        <td style="width:100px">狀態</td>
+        <td style="width:50px">測試</td>
+        <td style="width:50px">檔案</td>
+        <td style="width:100px">申請日期</td>
+        <td style="width:100px">申請帳號</td>
+        <td style="width:50px">明細</td>
+        <td style="width:50px">流程單</td>
+    </tr>
+    <tr><td colspan="11"><hr /></td></tr>
 
-<h2>Index</h2>
+</table>

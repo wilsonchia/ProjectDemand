@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html><html><head>
+﻿@{
+    if (Session["AccIndex"] == null)
+    {
+        Response.Redirect("~/Home/Login");
+        Response.End();        
+    }
+}
+<!DOCTYPE html><html><head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title></title>
@@ -51,6 +58,22 @@
 
         $.datepicker.setDefaults($.datepicker.regional['zh-TW']);
 
+        sendaJaxPost = function (SendURL, SendData) {
+            $.ajax({
+                url: SendURL,
+                type: 'Post',
+                data: SendData,
+                async: false,
+                success: function (data) {
+                    rtnValue = data;
+                },
+                error: function (error, ajaxOption, thrownError) {
+                    rtnValue = error.responseText;
+                }
+            });
+            return rtnValue;
+        }
+
 
     </script>
     <style>
@@ -84,7 +107,7 @@
 
     </style>
     <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
-        <tr class="top"><td id="topl"></td><td style="width:100px"></td><td style="width:900px">
+        <tr class="top"><td id="topl"></td><td style="width:100px">@Session["AccIndex"].ToString()</td><td style="width:900px">
             <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
                 <tr style="height:35px; font-size:18px; color:white; font-weight:bold">
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("系統公告", "Index", "Home")</td>
@@ -92,9 +115,9 @@
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("使用帳號", "Index", "AccountDetail")</td>
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("帳號關聯", "Index", "AccountRelation")</td>
                     <td style="width:120px; text-align:center; color:white">@Html.ActionLink("需求申請", "Index", "DemandDetail")</td>
-                    <td style="width:120px; text-align:center">@Html.ActionLink("修改密碼", null, null, new { onclick = "$('#PassMod').fadeIn('show');", href = "#" })</td>
-                    <td style="width:120px; text-align:center">@Html.ActionLink("登出系統", "LogOut", "Home")</td>
-                    <td style="width:120px; text-align:center">@Session["AccIndex"].ToString()</td>
+                    <td style="width:120px; text-align:center; color:white">@Html.ActionLink("修改密碼", null, null, new { onclick = "$('#PassMod').fadeIn('show');$('#textPassOld').focus();", href = "#" })</td>
+                    <td style="width:120px; text-align:center; color:white">@Html.ActionLink("登出系統", "LogOut", "Home")</td>
+                    <td style="width:120px; text-align:center"></td>
                 </tr>
             </table>
         </td><td id="topr"></td></tr>
@@ -104,28 +127,22 @@
     <div id="PassMod" class="modalPM" style="display:none;text-align:center">
         @Html.Hidden("hideAccIndex", @Session["AccIndex"].ToString())
         <script type="text/javascript">
-
-
+                        
             formPassMod = function () {
                 if ($('#textPassOld').val() == "") { alert("原有密碼不得空白!!"); $('#textPassOld').focus(); return false; }
-                alert($('#textPassOld').val());
-                alert($('#hideAccIndex').val());
                 var FormURL = baseURL + "Home/funExecutePassword";
                 var objData = { execClass: 'C', fAccIndex: $('#hideAccIndex').val(), fPassword: $('#textPassOld').val(), nPassword : '' };
-                $.ajax({
-                    url: FormURL,
-                    type: 'Post',
-                    data: objData,
-                    async: false,
-                    success: function (data) {
-                        rtnValue = data;
-                    },
-                    error: function (error, ajaxOption, thrownError) {
-                        rtnValue = error.responseText;
-                    }
-                });
-                alert(rtnValue);
-                //alert($('#hideAccIndex').val());
+                var rtnValue = sendaJaxPost(FormURL, objData);
+                if (rtnValue.split('_')[0] == "X") { alert(rtnValue.split('_')[1]); $('#textPassOld').focus(); return false; }
+                if ($('#textPassNew').val() == "") { alert("新密碼不得空白!!"); $('#textPassNew').focus(); return false; }
+                if ($('#textPassNewC').val() == "") { alert("確認密碼不得空白!!"); $('#textPassNewC').focus(); return false; }
+                if ($('#textPassNew').val() != $('#textPassNewC').val()) { alert("新密碼與確認密碼不正確!!"); $('#textPassNewC').focus(); return false; }
+                if ($('#textPassNew').val() != "") {
+                    FormURL = baseURL + "Home/funExecutePassword";
+                    var objDataC = { execClass: 'U', fAccIndex: $('#hideAccIndex').val(), fPassword: $('#textPassOld').val(), nPassword: $('#textPassNew').val() };                    
+                    rtnValue = sendaJaxPost(FormURL, objDataC);
+                    if (rtnValue == "O") { $('#PassMod').fadeOut("slow");}
+                }
                 return false;
             }
 
